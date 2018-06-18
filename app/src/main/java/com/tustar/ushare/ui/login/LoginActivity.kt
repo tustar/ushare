@@ -15,8 +15,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import com.tustar.common.util.Logger
-import com.tustar.common.util.MobileUtils
+import com.tustar.ushare.util.Logger
+import com.tustar.ushare.util.MobileUtils
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
 import com.tustar.ushare.util.CommonDefine
@@ -64,7 +64,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (s == null || s?.length == 0) {
+                if (s == null || s.length == 0) {
                     phoneClearBtn.visibility = View.INVISIBLE
                 } else {
                     phoneClearBtn.visibility = View.VISIBLE
@@ -77,12 +77,12 @@ class LoginActivity : BaseActivity(), LoginContract.View {
             phoneEditText.text.clear()
         }
 
-        codeEditText = findViewById(R.id.login_code_editText)
+        codeEditText = findViewById(R.id.login_captcha_editText)
 
-        loginCodeGet = findViewById(R.id.login_code_btn)
+        loginCodeGet = findViewById(R.id.login_captcha_btn)
         loginCodeGet.setOnClickListener {
 
-            presenter.sendCode(this, phoneEditText.text.toString())
+            presenter.sendCaptcha(phoneEditText.text.toString())
         }
 
 
@@ -91,7 +91,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
             if (!MobileUtils.isMobileOk(phoneEditText.text.toString().trim())) {
                 showToast(R.string.login_phone_err)
             } else {
-                presenter.login(this, phoneEditText.text.toString(), codeEditText.text.toString())
+                presenter.login(phoneEditText.text.toString(), codeEditText.text.toString())
             }
         }
     }
@@ -99,7 +99,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
-        handler?.removeMessages(MSG_CODE_TIMER)
+        handler.removeMessages(MSG_CODE_TIMER)
     }
 
 
@@ -107,7 +107,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         toast(resId)
     }
 
-    override fun showVerificationCode(vCode: String) {
+    override fun showCaptcha(vCode: String) {
         Logger.d("vCode = $vCode")
         codeEditText.setText(vCode)
         val intent = Intent(this, LoginActivity::class.java).apply {
@@ -116,11 +116,11 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         val pendingIntent = PendingIntent.getActivity(this, 1, intent, 0)
         val builder = NotificationCompat.Builder(this,
                 CommonDefine.CHANNEL_ID).apply {
-            setContentTitle(getString(R.string.login_code_notify_title))
-            setContentText(getString(R.string.login_code_notify_text, vCode))
+            setContentTitle(getString(R.string.login_captcha_notify_title))
+            setContentText(getString(R.string.login_captcha_notify_text, vCode))
             setDefaults(NotificationCompat.DEFAULT_SOUND)
-            setSmallIcon(R.drawable.ic_launcher)
-            setLargeIcon(BitmapFactory.decodeResource(resources, R.drawable.ic_launcher))
+            setSmallIcon(R.mipmap.ic_launcher)
+            setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
             setContentIntent(pendingIntent)
             NotificationCompat.PRIORITY_DEFAULT
             setFullScreenIntent(pendingIntent, true)
@@ -138,11 +138,11 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         loginSubmit.isEnabled = enable
     }
 
-    override fun setCodeGetEnable(enable: Boolean) {
+    override fun setCaptchaGetEnable(enable: Boolean) {
         loginCodeGet.isEnabled = enable
     }
 
-    override fun startCodeTimer() {
+    override fun startCaptchaTimer() {
         timer = CommonDefine.CODE_TIMER
         handler.removeMessages(MSG_CODE_TIMER)
         handler.sendEmptyMessageDelayed(MSG_CODE_TIMER, 1000)
@@ -167,12 +167,12 @@ class LoginActivity : BaseActivity(), LoginContract.View {
                     MSG_CODE_TIMER -> {
                         timer--
                         if (timer > 0) {
-                            val text = getString(R.string.login_code_timer, timer)
+                            val text = getString(R.string.login_captcha_timer, timer)
                             loginCodeGet.text = text
                             handler.removeMessages(MSG_CODE_TIMER)
                             handler.sendEmptyMessageDelayed(MSG_CODE_TIMER, 1000)
                         } else {
-                            loginCodeGet.text = getString(R.string.login_code_get)
+                            loginCodeGet.text = getString(R.string.login_captcha_get)
                             loginCodeGet.isEnabled = true
                         }
 

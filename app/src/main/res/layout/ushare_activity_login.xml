@@ -69,7 +69,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/login_code_layout"
+        android:id="@+id/login_captcha_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/input_layout_height"
         android:layout_marginEnd="@dimen/input_margin"
@@ -81,14 +81,14 @@
         app:layout_constraintTop_toBottomOf="@id/login_phone_layout">
 
         <EditText
-            android:id="@+id/login_code_editText"
+            android:id="@+id/login_captcha_editText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center_vertical|left"
-            android:hint="@string/login_code_hint"
+            android:hint="@string/login_captcha_hint"
             android:inputType="number"
             android:maxLength="6"
             android:textColor="@color/input_text_color"
@@ -96,14 +96,14 @@
             android:textSize="@dimen/input_text_size" />
 
         <TextView
-            android:id="@+id/login_code_btn"
+            android:id="@+id/login_captcha_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="0dp"
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
-            android:text="@string/login_code_get"
+            android:text="@string/login_captcha_get"
             android:textColor="@color/selector_code_btn_text_color"
             android:textSize="@dimen/login_label_text_size" />
     </LinearLayout>
@@ -114,9 +114,9 @@
         android:layout_width="0dp"
         android:layout_marginTop="@dimen/login_btn_margin_top"
         android:text="@string/login_submit"
-        app:layout_constraintEnd_toEndOf="@+id/login_code_layout"
-        app:layout_constraintStart_toStartOf="@+id/login_code_layout"
-        app:layout_constraintTop_toBottomOf="@id/login_code_layout" />
+        app:layout_constraintEnd_toEndOf="@+id/login_captcha_layout"
+        app:layout_constraintStart_toStartOf="@+id/login_captcha_layout"
+        app:layout_constraintTop_toBottomOf="@id/login_captcha_layout" />
 
 
 </android.support.constraint.ConstraintLayout>

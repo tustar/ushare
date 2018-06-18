@@ -1,14 +1,12 @@
 package com.tustar.ushare.ui.login
 
-import android.content.Context
-import com.tustar.common.util.Logger
-import com.tustar.common.util.MobileUtils
 import com.tustar.ushare.R
+import com.tustar.ushare.UShareApplication
 import com.tustar.ushare.data.bean.HttpResult
 import com.tustar.ushare.data.bean.Message
 import com.tustar.ushare.net.exception.ExceptionHandler
 import com.tustar.ushare.net.exception.StatusCode
-import com.tustar.ushare.util.CodeUtils
+import com.tustar.ushare.util.*
 
 class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
 
@@ -20,24 +18,27 @@ class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
         LoginModel()
     }
 
-    override fun login(context: Context, mobile: String, code: String) {
-        Logger.d("mobile = $mobile, code = $code")
+    override fun login(mobile: String, captcha: String) {
+        Logger.d("mobile = $mobile, captcha = $captcha")
         if (!MobileUtils.isMobileOk(mobile)) {
             view.showToast(R.string.login_phone_err)
             return
         }
 
-        if (!CodeUtils.isCodeOk(code)) {
-            view.showToast(R.string.login_code_err)
+        if (!CodeUtils.isCodeOk(captcha)) {
+            view.showToast(R.string.login_captcha_err)
             return
         }
 
         view.setSubmitEnable(false)
-        addSubscription(disposable = model.login(context, mobile, code).subscribe({
+        addSubscription(disposable = model.login(mobile, captcha).subscribe({
             view.setSubmitEnable(true)
-            when (it.status) {
+            when (it.code) {
                 HttpResult.OK -> {
                     val user = it.data
+                    var token:String by Preference(UShareApplication.context,
+                            CommonDefine.HEAD_ACCESS_TOKEN, "")
+                    token = it.data.token
                     view.toMainUI()
                 }
                 HttpResult.FAILURE -> {
@@ -64,20 +65,20 @@ class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
         })
     }
 
-    override fun sendCode(context: Context, mobile: String) {
+    override fun sendCaptcha(mobile: String) {
 
         if (!MobileUtils.isMobileOk(mobile)) {
             view.showToast(R.string.login_phone_err)
             return
         }
 
-        view.setCodeGetEnable(false)
-        addSubscription(disposable = model.code(context, mobile).subscribe({
-            view.startCodeTimer()
-            when (it.status) {
+        view.setCaptchaGetEnable(false)
+        addSubscription(disposable = model.code(mobile).subscribe({
+            view.startCaptchaTimer()
+            when (it.code) {
                 HttpResult.OK -> {
-                    view.showToast(R.string.login_code_get_success)
-                    view.showVerificationCode(it.data.v_code)
+                    view.showToast(R.string.login_captcha_get_success)
+                    view.showCaptcha(it.data.captcha)
                 }
                 HttpResult.FAILURE -> {
                     when (it.message) {
@@ -91,14 +92,14 @@ class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
                 }
             }
         }) {
-            view.setCodeGetEnable(true)
+            view.setCaptchaGetEnable(true)
             val code = ExceptionHandler.handleException(it)
             when (code) {
                 StatusCode.SOCKET_TIMEOUT_ERROR -> view.showToast(R.string.socket_timeout_error)
                 StatusCode.CONNECT_ERROR -> view.showToast(R.string.connect_error)
                 StatusCode.UNKNOWN_HOST_ERROR -> view.showToast(R.string.unkown_host_error)
                 StatusCode.SERVER_ERROR -> view.showToast(R.string.server_err)
-                else -> view.showToast(R.string.login_code_get_err)
+                else -> view.showToast(R.string.login_captcha_get_err)
             }
         })
     }

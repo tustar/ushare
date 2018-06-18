@@ -1,13 +1,12 @@
 package com.tustar.ushare.ui.topic
 
-import android.content.Context
-import com.tustar.common.util.Logger
 import com.tustar.ushare.R
 import com.tustar.ushare.data.bean.HttpResult
 import com.tustar.ushare.data.bean.Message
 import com.tustar.ushare.net.exception.ExceptionHandler
 import com.tustar.ushare.net.exception.StatusCode
 import com.tustar.ushare.util.CommonDefine
+import com.tustar.ushare.util.Logger
 
 
 class TopicPresenter(var view: TopicContract.View) : TopicContract.Presenter {
@@ -21,10 +20,10 @@ class TopicPresenter(var view: TopicContract.View) : TopicContract.Presenter {
         TopicModel()
     }
 
-    override fun getTopics(context: Context) {
-        addSubscription(disposable = model.topicList(context, page, CommonDefine.PAGE_SIZE)
+    override fun getTopics() {
+        addSubscription(disposable = model.topicList(page, CommonDefine.PAGE_SIZE)
                 .subscribe({
-                    when (it.status) {
+                    when (it.code) {
                         HttpResult.OK -> {
                             view.updateTopics(it.data)
                         }
@@ -46,7 +45,7 @@ class TopicPresenter(var view: TopicContract.View) : TopicContract.Presenter {
                         StatusCode.CONNECT_ERROR -> view.showToast(R.string.connect_error)
                         StatusCode.UNKNOWN_HOST_ERROR -> view.showToast(R.string.unkown_host_error)
                         StatusCode.SERVER_ERROR -> view.showToast(R.string.server_err)
-                        else -> view.showToast(R.string.login_code_get_err)
+                        else -> view.showToast(R.string.login_captcha_get_err)
                     }
                 })
     }

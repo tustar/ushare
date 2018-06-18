@@ -10,8 +10,8 @@ import android.view.View
 import android.view.Window
 import android.widget.ImageButton
 import android.widget.TextView
-import com.tustar.common.util.ActivityCollector
-import com.tustar.common.util.Logger
+import com.tustar.ushare.util.ActivityCollector
+import com.tustar.ushare.util.Logger
 import com.tustar.ushare.R
 import org.jetbrains.anko.toast
 

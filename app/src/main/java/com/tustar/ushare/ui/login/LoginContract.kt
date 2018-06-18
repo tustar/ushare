@@ -1,6 +1,5 @@
 package com.tustar.ushare.ui.login
 
-import android.content.Context
 import com.tustar.ushare.base.BasePresenter
 import com.tustar.ushare.base.BaseView
 
@@ -8,15 +7,15 @@ interface LoginContract {
 
     interface View : BaseView<Presenter> {
         fun showToast(resId: Int)
-        fun showVerificationCode(vCode: String)
+        fun showCaptcha(captcha: String)
         fun setSubmitEnable(enable: Boolean)
-        fun setCodeGetEnable(enable: Boolean)
-        fun startCodeTimer()
+        fun setCaptchaGetEnable(enable: Boolean)
+        fun startCaptchaTimer()
         fun toMainUI()
     }
 
     interface Presenter : BasePresenter {
-        fun login(context: Context, mobile: String, code: String)
-        fun sendCode(context: Context, mobile: String)
+        fun login(mobile: String, captcha: String)
+        fun sendCaptcha(mobile: String)
     }
 }

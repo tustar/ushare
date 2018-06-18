@@ -12,6 +12,6 @@ interface TopicContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getTopics(context: Context)
+        fun getTopics()
     }
 }

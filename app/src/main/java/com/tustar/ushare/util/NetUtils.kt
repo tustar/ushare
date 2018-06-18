@@ -2,6 +2,7 @@ package com.tustar.ushare.util
 
 import android.content.Context
 import com.tustar.ushare.BuildConfig
+import com.tustar.ushare.UShareApplication
 
 object NetUtils {
 
@@ -17,11 +18,11 @@ object NetUtils {
         return params
     }
 
-    fun getSignedParams(context: Context, params: MutableMap<String, String> = mutableMapOf()):
+    fun getSignedParams(params: MutableMap<String, String> = mutableMapOf()):
             MutableMap<String, String> {
         params.putAll(getBasicParams())
         val signStr = RsaUtils.buildSignContent(params)
-        val privateKey = RsaUtils.getPrivateKey(context, BuildConfig.PRIVATE_KEY)
+        val privateKey = RsaUtils.getPrivateKey(UShareApplication.context, BuildConfig.PRIVATE_KEY)
         val sign = RsaUtils.rsaSign(signStr, privateKey, UTF_8)
         params[SIGN] = sign ?: ""
         return params

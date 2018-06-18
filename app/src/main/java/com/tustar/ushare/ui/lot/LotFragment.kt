@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tustar.common.util.Logger
+import com.tustar.ushare.util.Logger
 import com.tustar.ushare.R
 import com.tustar.ushare.data.bean.User
 import org.jetbrains.anko.find
@@ -36,9 +36,7 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
         val view = inflater.inflate(R.layout.ushare_fragment_lot, container,
                 false)
         initRecycleView(view)
-        activity?.let {
-            presenter.getUsers(it)
-        }
+        presenter.getUsers()
 
         return view
     }

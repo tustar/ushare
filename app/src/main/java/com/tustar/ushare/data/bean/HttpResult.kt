@@ -7,7 +7,7 @@ import com.tustar.ushare.util.Preference
 data class HttpResult<out D, out E>(
         val data: D,
         val message: String,
-        val status: Int,
+        val code: Int,
         val extra: E
 ) {
     companion object {
@@ -54,4 +54,4 @@ data class Topic(val id: Long,
 )
 
 
-data class Code(var v_code: String)
+data class Code(var captcha: String)

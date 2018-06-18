@@ -16,7 +16,9 @@ import com.tustar.ushare.ui.topic.TopicFragment
 import org.jetbrains.anko.find
 
 
-class MainActivity : BaseActivity() {
+class MainActivity : BaseActivity(), MainContract.View {
+
+    override lateinit var presenter: MainContract.Presenter
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
@@ -37,6 +39,7 @@ class MainActivity : BaseActivity() {
         setActionBar()
         setDarkStatusIcon(false)
         setStatusBarColor(R.color.action_bar_bg_color)
+        presenter = MainPresenter(this)
 
         initViews()
     }
@@ -48,7 +51,7 @@ class MainActivity : BaseActivity() {
 
     override fun initViews() {
         super.initViews()
-        setTitle(R.string.ushare_app_name)
+        setTitle(R.string.app_name)
 
         initViewPager()
 
@@ -79,11 +82,16 @@ class MainActivity : BaseActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.onLogin()
+    }
+
     override fun onBackPressed() {
         forcedExitOnBackPressed()
     }
 
-    private fun toLoginUI() {
+    override fun toLoginUI() {
         val intent = Intent(this, LoginActivity::class.java).apply {
 
         }

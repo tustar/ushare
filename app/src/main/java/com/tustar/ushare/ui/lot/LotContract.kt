@@ -12,6 +12,6 @@ interface LotContract {
     }
 
     interface Presenter : BasePresenter {
-        fun getUsers(context: Context)
+        fun getUsers()
     }
 }

@@ -1,7 +1,7 @@
 package com.tustar.ushare.net.exception
 
 import com.google.gson.JsonParseException
-import com.tustar.common.util.Logger
+import com.tustar.ushare.util.Logger
 import org.json.JSONException
 import retrofit2.HttpException
 import java.net.ConnectException

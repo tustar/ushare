@@ -1,6 +1,6 @@
 package com.tustar.ushare.net
 
-import com.tustar.common.util.Logger
+import com.tustar.ushare.util.Logger
 import com.tustar.ushare.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient

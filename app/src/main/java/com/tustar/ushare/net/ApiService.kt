@@ -21,7 +21,7 @@ interface ApiService {
     // 登录
     @FormUrlEncoded
     @POST("v1/user/login")
-    fun login(@FieldMap params: Map<String, String>): Observable<HttpResult<Any, Any>>
+    fun login(@FieldMap params: Map<String, String>): Observable<HttpResult<User, Any>>
 
     // 获取用户列表
     @GET("/v1/user")
