@@ -16,7 +16,7 @@ class TopicAdapter(var topics: MutableList<Topic>) : RecyclerView.Adapter<TopicA
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
-                R.layout.ushare_item_topic, parent, false)
+                R.layout.item_topic, parent, false)
         return ViewHolder(itemView)
     }
 

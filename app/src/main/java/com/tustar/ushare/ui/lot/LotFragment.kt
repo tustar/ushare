@@ -13,7 +13,6 @@ import com.tustar.ushare.R
 import com.tustar.ushare.data.bean.User
 import org.jetbrains.anko.find
 import org.jetbrains.anko.support.v4.toast
-import org.jetbrains.anko.toast
 
 class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener {
 
@@ -33,7 +32,7 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.ushare_fragment_lot, container,
+        val view = inflater.inflate(R.layout.fragment_lot, container,
                 false)
         initRecycleView(view)
         presenter.getUsers()

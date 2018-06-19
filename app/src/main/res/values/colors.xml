@@ -10,7 +10,7 @@
     <color name="top_divider_color">#d6d6d6</color>
     <color name="input_text_color">#333333</color>
     <color name="hint_color">#b2b2b2</color>
-    <color name="ic_launcher_background">#30C43C</color>
+    <color name="ic_launcher_background">#ff0099cc</color>
 
     <!--Action bar-->
     <color name="action_bar_bg_color">#ff33b5e5</color>

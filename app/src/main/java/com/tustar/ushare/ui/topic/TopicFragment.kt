@@ -31,7 +31,7 @@ class TopicFragment : Fragment(), TopicContract.View, TopicAdapter.OnItemClickLi
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.ushare_fragment_topic, container, false)
+        val view = inflater.inflate(R.layout.fragment_topic, container, false)
 
         initRecycleView(view)
         presenter.getTopics()

@@ -1,8 +1,12 @@
 package com.tustar.ushare.ui.login
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
+import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -15,11 +19,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
-import com.tustar.ushare.util.Logger
-import com.tustar.ushare.util.MobileUtils
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
 import com.tustar.ushare.util.CommonDefine
+import com.tustar.ushare.util.Logger
+import com.tustar.ushare.util.MobileUtils
 import org.jetbrains.anko.toast
 import java.lang.ref.WeakReference
 
@@ -40,7 +44,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ushare_activity_login)
+        setContentView(R.layout.activity_login)
         setActionBar()
         setDarkStatusIcon(false)
         setStatusBarColor(R.color.action_bar_bg_color)
@@ -107,29 +111,43 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         toast(resId)
     }
 
-    override fun showCaptcha(vCode: String) {
-        Logger.d("vCode = $vCode")
-        codeEditText.setText(vCode)
-        val intent = Intent(this, LoginActivity::class.java).apply {
-            putExtra(CommonDefine.EXTRA_VCODE, vCode)
+    override fun showCaptcha(captcha: String) {
+        Logger.d("captcha = $captcha")
+        codeEditText.setText(captcha)
+//        val intent = Intent(this, LoginActivity::class.java).apply {
+//            putExtra(CommonDefine.EXTRA_VCODE, captcha)
+//        }
+//        val pendingIntent = PendingIntent.getActivity(this, 1, intent, 0)
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(CommonDefine.CHANNEL_ID, CommonDefine.CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH)
+            channel.description = CommonDefine.CHANNEL_DESCRIPTION
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            channel.vibrationPattern = longArrayOf(100, 200, 300, 400, 500, 400, 300, 200, 400)
+            channel.setShowBadge(false)
+            val nm = getSystemService(
+                    Context.NOTIFICATION_SERVICE) as NotificationManager
+            nm.createNotificationChannel(channel)
         }
-        val pendingIntent = PendingIntent.getActivity(this, 1, intent, 0)
+
         val builder = NotificationCompat.Builder(this,
                 CommonDefine.CHANNEL_ID).apply {
             setContentTitle(getString(R.string.login_captcha_notify_title))
-            setContentText(getString(R.string.login_captcha_notify_text, vCode))
+            setContentText(getString(R.string.login_captcha_notify_text, captcha))
             setDefaults(NotificationCompat.DEFAULT_SOUND)
             setSmallIcon(R.mipmap.ic_launcher)
             setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher))
-            setContentIntent(pendingIntent)
+//            setContentIntent(pendingIntent)
             NotificationCompat.PRIORITY_DEFAULT
-            setFullScreenIntent(pendingIntent, true)
+//            setFullScreenIntent(pendingIntent, true)
             setAutoCancel(true)
             setWhen(System.currentTimeMillis())
         }
 
         val notification = builder.build()
-
         val nm = NotificationManagerCompat.from(this)
         nm.notify((System.currentTimeMillis() / 1000L).toInt(), notification)
     }

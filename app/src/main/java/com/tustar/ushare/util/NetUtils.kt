@@ -1,12 +1,11 @@
 package com.tustar.ushare.util
 
-import android.content.Context
 import com.tustar.ushare.BuildConfig
 import com.tustar.ushare.UShareApplication
 
 object NetUtils {
 
-    const val PARTNER = "com.tustar.demo"
+    const val PARTNER = "com.tustar.ushare"
     const val UTF_8 = "utf-8"
     const val SIGN = "sign"
 

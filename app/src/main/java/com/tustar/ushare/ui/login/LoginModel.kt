@@ -20,7 +20,7 @@ class LoginModel {
         var params = mutableMapOf<String, String>()
         params["mobile"] = mobile
         params["deviceId"] = DeviceUtils.getDeviceId(UShareApplication.context) ?: ""
-        params = NetUtils.getSignedParams(UShareApplication.context, params)
+        params = NetUtils.getSignedParams(params)
 
         return RetrofitManager.service
                 .sendCode(params).compose(SchedulerUtils.ioToMain())
@@ -33,7 +33,7 @@ class LoginModel {
         var params = mutableMapOf<String, String>()
         params["mobile"] = mobile
         params["captcha"] = captcha
-        params = NetUtils.getSignedParams(UShareApplication.context, params)
+        params = NetUtils.getSignedParams(params)
 
         return RetrofitManager.service
                 .login(params).compose(SchedulerUtils.ioToMain())

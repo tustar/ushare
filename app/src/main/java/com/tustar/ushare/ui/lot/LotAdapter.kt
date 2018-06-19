@@ -16,7 +16,7 @@ class LotAdapter(var users: MutableList<User>) : RecyclerView.Adapter<LotAdapter
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(
-                R.layout.ushare_item_lot, parent, false)
+                R.layout.item_lot, parent, false)
         return ViewHolder(itemView)
     }
 

@@ -35,7 +35,7 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.ushare_activity_main)
+        setContentView(R.layout.activity_main)
         setActionBar()
         setDarkStatusIcon(false)
         setStatusBarColor(R.color.action_bar_bg_color)
@@ -99,7 +99,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     private fun getTabItemView(position: Int): View {
-        val itemView = layoutInflater.inflate(R.layout.ushare_item_tab, null)
+        val itemView = layoutInflater.inflate(R.layout.item_tab, null)
         tabItems[position] = TabItem(itemView, position)
         itemView.tag = position
         itemView.setOnClickListener(listener)
