@@ -13,7 +13,6 @@ ext {
     espressoVersion = '3.0.1'
     ankoVersion = '0.10.4'
     retrofitVersion = '2.4.0'
-    roomVersion = '1.0.0'
     supportLibraryVersion = '27.1.1'
     constraintLayoutVersion = '1.0.2'
     loggingInterceptorVersion = '3.10.0'
@@ -26,8 +25,14 @@ ext {
     recyclerviewSwipe = '1.0.2'
     androidGifDrawable = '1.2.7'
 
-    //
+    // databinding
     databindingVersion = '3.0.0'
+
+    // room
+    roomVersion = '1.1.0'
+
+    // lottie
+    lottieVersion = '2.5.5'
 }
 
 buildscript {

@@ -5,10 +5,13 @@ import com.tustar.ushare.base.BaseView
 
 interface MainContract {
     interface View : BaseView<Presenter> {
+        fun showToast(resId: Int)
+        fun updateLotUI()
         fun toLoginUI()
     }
 
     interface Presenter : BasePresenter {
         fun onLogin()
+        fun updateWeight(weight: Int)
     }
 }

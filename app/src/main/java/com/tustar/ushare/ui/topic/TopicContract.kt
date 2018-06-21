@@ -1,9 +1,8 @@
 package com.tustar.ushare.ui.topic
 
-import android.content.Context
 import com.tustar.ushare.base.BasePresenter
 import com.tustar.ushare.base.BaseView
-import com.tustar.ushare.data.bean.Topic
+import com.tustar.ushare.data.entry.Topic
 
 interface TopicContract {
     interface View : BaseView<Presenter> {

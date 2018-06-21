@@ -1,9 +1,8 @@
 package com.tustar.ushare.ui.lot
 
-import android.content.Context
 import com.tustar.ushare.base.BasePresenter
 import com.tustar.ushare.base.BaseView
-import com.tustar.ushare.data.bean.User
+import com.tustar.ushare.data.entry.User
 
 interface LotContract {
     interface View : BaseView<Presenter> {

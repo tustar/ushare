@@ -8,9 +8,12 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tustar.ushare.util.Logger
 import com.tustar.ushare.R
-import com.tustar.ushare.data.bean.User
+import com.tustar.ushare.UShareApplication
+import com.tustar.ushare.data.entry.User
+import com.tustar.ushare.util.CommonDefine
+import com.tustar.ushare.util.Logger
+import com.tustar.ushare.util.Preference
 import org.jetbrains.anko.find
 import org.jetbrains.anko.support.v4.toast
 
@@ -21,6 +24,7 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: LotAdapter
     private var users = arrayListOf<User>()
+    private var oldToken: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,16 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
         presenter.getUsers()
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        var token: String by Preference(UShareApplication.context,
+                CommonDefine.HEAD_ACCESS_TOKEN, "")
+        if (oldToken != token) {
+            presenter.getUsers()
+            oldToken = token
+        }
     }
 
     private fun initRecycleView(view: View) {
@@ -66,7 +80,6 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        presenter = LotPresenter(this)
     }
 
     override fun onDetach() {

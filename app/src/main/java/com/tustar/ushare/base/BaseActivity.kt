@@ -4,15 +4,16 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
 import android.widget.ImageButton
 import android.widget.TextView
+import com.tustar.ushare.R
 import com.tustar.ushare.util.ActivityCollector
 import com.tustar.ushare.util.Logger
-import com.tustar.ushare.R
+import com.tustar.ushare.util.setupActionBar
+import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 
 
@@ -33,17 +34,15 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     open fun setActionBar() {
-        val toolbar = findViewById<Toolbar>(R.id.action_bar)
-        actionBarTitle = findViewById(R.id.action_bar_title)
-        actionBarBack = findViewById(R.id.action_bar_back)
-        actionBarBack?.setOnClickListener {
-            finish()
+        setupActionBar(R.id.action_bar) {
+            actionBarTitle = find(R.id.action_bar_title)
+            actionBarBack = find(R.id.action_bar_back)
+            actionBarBack?.setOnClickListener {
+                finish()
+            }
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowTitleEnabled(false)
         }
-
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.setDisplayHomeAsUpEnabled(false)
-        supportActionBar?.setDisplayShowTitleEnabled(false)
     }
 
     override fun onTitleChanged(title: CharSequence, color: Int) {

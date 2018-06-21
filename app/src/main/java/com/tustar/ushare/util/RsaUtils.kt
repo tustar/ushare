@@ -2,7 +2,6 @@ package com.tustar.ushare.util
 
 import android.content.Context
 import android.util.Base64
-import com.tustar.ushare.util.Logger
 import java.io.*
 import java.security.*
 import java.security.spec.InvalidKeySpecException

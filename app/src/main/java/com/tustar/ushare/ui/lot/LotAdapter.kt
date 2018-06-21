@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.tustar.ushare.R
-import com.tustar.ushare.data.bean.User
+import com.tustar.ushare.data.entry.User
 import org.jetbrains.anko.find
 
 

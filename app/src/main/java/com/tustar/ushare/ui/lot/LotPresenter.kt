@@ -1,15 +1,16 @@
 package com.tustar.ushare.ui.lot
 
-import android.content.Context
-import com.tustar.ushare.util.Logger
 import com.tustar.ushare.R
-import com.tustar.ushare.data.bean.HttpResult
-import com.tustar.ushare.data.bean.Message
-import com.tustar.ushare.net.exception.ExceptionHandler
-import com.tustar.ushare.net.exception.StatusCode
+import com.tustar.ushare.data.entry.Message
+import com.tustar.ushare.data.entry.Response
+import com.tustar.ushare.data.exception.ExceptionHandler
+import com.tustar.ushare.data.exception.StatusCode
+import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.util.CommonDefine
+import com.tustar.ushare.util.Logger
 
-class LotPresenter(var view: LotContract.View) : LotContract.Presenter {
+class LotPresenter(private val view: LotContract.View,
+                   private val repo: UserRepository) : LotContract.Presenter {
 
     private var page = 1
 
@@ -17,18 +18,14 @@ class LotPresenter(var view: LotContract.View) : LotContract.Presenter {
         view.presenter = this
     }
 
-    private val model by lazy {
-        LotModel()
-    }
-
     override fun getUsers() {
-        addSubscription(disposable = model.userList(page, CommonDefine.PAGE_SIZE)
+        addSubscription(disposable = repo.userList(page, CommonDefine.PAGE_SIZE)
                 .subscribe({
                     when (it.code) {
-                        HttpResult.OK -> {
+                        Response.OK -> {
                             view.updateUsers(it.data)
                         }
-                        HttpResult.FAILURE -> {
+                        Response.FAILURE -> {
                             when (it.message) {
                                 Message.Unauthorized -> Logger.d("Sign Error")
                                 else -> {

@@ -8,9 +8,9 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tustar.ushare.util.Logger
 import com.tustar.ushare.R
-import com.tustar.ushare.data.bean.Topic
+import com.tustar.ushare.data.entry.Topic
+import com.tustar.ushare.util.Logger
 import org.jetbrains.anko.find
 import org.jetbrains.anko.support.v4.toast
 
@@ -65,7 +65,6 @@ class TopicFragment : Fragment(), TopicContract.View, TopicAdapter.OnItemClickLi
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        presenter = TopicPresenter(this)
     }
 
     override fun onDetach() {

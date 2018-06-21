@@ -2,21 +2,20 @@ package com.tustar.ushare.ui.login
 
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
-import com.tustar.ushare.data.bean.HttpResult
-import com.tustar.ushare.data.bean.Message
-import com.tustar.ushare.net.exception.ExceptionHandler
-import com.tustar.ushare.net.exception.StatusCode
+import com.tustar.ushare.data.entry.Message
+import com.tustar.ushare.data.entry.Response
+import com.tustar.ushare.data.exception.ExceptionHandler
+import com.tustar.ushare.data.exception.StatusCode
+import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.util.*
 
-class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
+class LoginPresenter(private val view: LoginContract.View,
+                     private val repo: UserRepository) : LoginContract.Presenter {
 
     init {
         view.presenter = this
     }
 
-    private val model by lazy {
-        LoginModel()
-    }
 
     override fun login(mobile: String, captcha: String) {
         Logger.d("mobile = $mobile, captcha = $captcha")
@@ -31,17 +30,19 @@ class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
         }
 
         view.setSubmitEnable(false)
-        addSubscription(disposable = model.login(mobile, captcha).subscribe({
+        addSubscription(disposable = repo.login(mobile, captcha).subscribe({
             view.setSubmitEnable(true)
             when (it.code) {
-                HttpResult.OK -> {
-                    val user = it.data
-                    var token:String by Preference(UShareApplication.context,
+                Response.OK -> {
+                    var token: String by Preference(UShareApplication.context,
                             CommonDefine.HEAD_ACCESS_TOKEN, "")
                     token = it.data.token
+                    var mobile: String by Preference(UShareApplication.context,
+                            CommonDefine.PREF_KEY_USER_MOBILE, "")
+                    mobile = it.data.mobile
                     view.toMainUI()
                 }
-                HttpResult.FAILURE -> {
+                Response.FAILURE -> {
                     when (it.message) {
                         Message.Unauthorized -> Logger.d("Sign Error")
                         else -> view.showToast(R.string.login_submit_err)
@@ -73,14 +74,14 @@ class LoginPresenter(var view: LoginContract.View) : LoginContract.Presenter {
         }
 
         view.setCaptchaGetEnable(false)
-        addSubscription(disposable = model.code(mobile).subscribe({
+        addSubscription(disposable = repo.code(mobile).subscribe({
             view.startCaptchaTimer()
             when (it.code) {
-                HttpResult.OK -> {
+                Response.OK -> {
                     view.showToast(R.string.login_captcha_get_success)
                     view.showCaptcha(it.data.captcha)
                 }
-                HttpResult.FAILURE -> {
+                Response.FAILURE -> {
                     when (it.message) {
                         Message.Unauthorized -> Logger.d("Sign Error")
                         else -> {

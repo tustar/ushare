@@ -1,19 +1,29 @@
 package com.tustar.ushare.ui.main
 
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
+import android.support.v7.widget.Toolbar
+import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.airbnb.lottie.LottieAnimationView
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
+import com.tustar.ushare.data.Injection
 import com.tustar.ushare.ui.login.LoginActivity
 import com.tustar.ushare.ui.lot.LotFragment
+import com.tustar.ushare.ui.lot.LotPresenter
 import com.tustar.ushare.ui.mine.MineFragment
+import com.tustar.ushare.ui.mine.MinePresenter
 import com.tustar.ushare.ui.topic.TopicFragment
+import com.tustar.ushare.ui.topic.TopicPresenter
 import org.jetbrains.anko.find
+import org.jetbrains.anko.toast
+import java.util.*
 
 
 class MainActivity : BaseActivity(), MainContract.View {
@@ -22,6 +32,8 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     private lateinit var viewPager: ViewPager
     private lateinit var tabLayout: TabLayout
+    private lateinit var lottieView: LottieAnimationView
+    private lateinit var lotFragment: LotFragment
     private lateinit var adapter: TabPagerAdapter
     private var tabItems = mutableMapOf<Int, TabItem>()
     private val listener = View.OnClickListener {
@@ -39,7 +51,7 @@ class MainActivity : BaseActivity(), MainContract.View {
         setActionBar()
         setDarkStatusIcon(false)
         setStatusBarColor(R.color.action_bar_bg_color)
-        presenter = MainPresenter(this)
+        presenter = MainPresenter(this, Injection.provideUserRepository(applicationContext))
 
         initViews()
     }
@@ -47,6 +59,13 @@ class MainActivity : BaseActivity(), MainContract.View {
     override fun setActionBar() {
         super.setActionBar()
         actionBarBack?.visibility = View.GONE
+        val toolbar = find(R.id.action_bar) as Toolbar
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.menu_item_shake -> showShakeUI()
+            }
+            return@setOnMenuItemClickListener true
+        }
     }
 
     override fun initViews() {
@@ -56,14 +75,25 @@ class MainActivity : BaseActivity(), MainContract.View {
         initViewPager()
 
         initTabLayout()
+
+        initAnimationView()
     }
 
     private fun initViewPager() {
         viewPager = find(R.id.view_pager)
         adapter = TabPagerAdapter(supportFragmentManager)
-        adapter.addFragment(LotFragment.newInstance())
-        adapter.addFragment(TopicFragment.newInstance())
-        adapter.addFragment(MineFragment.newInstance())
+        //
+        lotFragment = LotFragment.newInstance()
+        adapter.addFragment(lotFragment)
+        LotPresenter(lotFragment, Injection.provideUserRepository(applicationContext))
+        //
+        val topicFragment = TopicFragment.newInstance()
+        adapter.addFragment(topicFragment)
+        TopicPresenter(topicFragment, Injection.provideTopicRepository())
+        //
+        val mineFragment = MineFragment.newInstance()
+        adapter.addFragment(mineFragment)
+        MinePresenter(mineFragment, Injection.provideUserRepository(applicationContext))
         viewPager.adapter = adapter
     }
 
@@ -82,9 +112,37 @@ class MainActivity : BaseActivity(), MainContract.View {
         }
     }
 
+    private fun initAnimationView() {
+        lottieView = find(R.id.lottie_view)
+        lottieView.addAnimatorListener(object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                lottieView.visibility = View.GONE
+                val random = Random(System.currentTimeMillis())
+                presenter.updateWeight(random.nextInt(100))
+                updateLotUI()
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+
+            }
+        })
+
+    }
+
     override fun onResume() {
         super.onResume()
         presenter.onLogin()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_main_option, menu)
+        return true
     }
 
     override fun onBackPressed() {
@@ -96,6 +154,19 @@ class MainActivity : BaseActivity(), MainContract.View {
 
         }
         startActivity(intent)
+    }
+
+    override fun updateLotUI() {
+        lotFragment.presenter.getUsers()
+    }
+
+    override fun showToast(resId: Int) {
+        toast(resId)
+    }
+
+    private fun showShakeUI() {
+        lottieView.visibility = View.VISIBLE
+        lottieView.playAnimation()
     }
 
     private fun getTabItemView(position: Int): View {

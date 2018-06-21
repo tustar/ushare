@@ -29,7 +29,6 @@ class MineFragment : Fragment(), MineContract.View {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        presenter = MinePresenter(this)
     }
 
     override fun onResume() {

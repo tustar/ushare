@@ -1,4 +1,4 @@
-package com.tustar.ushare.rx.scheduler
+package com.tustar.ushare.util.scheduler
 
 /**
  * Created by xuhao on 2017/11/17.

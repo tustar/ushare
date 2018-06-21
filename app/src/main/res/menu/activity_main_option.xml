@@ -2,8 +2,8 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/menu_item_search"
-        android:icon="@drawable/selector_ic_lot"
+        android:id="@+id/menu_item_shake"
+        android:icon="@drawable/selector_ic_menu_shake"
         android:title="@string/tab_lot"
         app:showAsAction="always" />
 </menu>

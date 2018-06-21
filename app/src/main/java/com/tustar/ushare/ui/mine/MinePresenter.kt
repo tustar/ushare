@@ -1,15 +1,12 @@
 package com.tustar.ushare.ui.mine
 
-import com.tustar.ushare.ui.topic.MineModel
+import com.tustar.ushare.data.repository.UserRepository
 
 
-class MinePresenter(var view: MineContract.View) : MineContract.Presenter {
+class MinePresenter(private val view: MineContract.View,
+                    private val repo: UserRepository) : MineContract.Presenter {
 
     init {
         view.presenter = this
-    }
-
-    private val model by lazy {
-        MineModel()
     }
 }

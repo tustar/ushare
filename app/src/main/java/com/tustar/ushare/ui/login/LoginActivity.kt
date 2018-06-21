@@ -2,11 +2,11 @@ package com.tustar.ushare.ui.login
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
+import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Message
@@ -21,6 +21,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
+import com.tustar.ushare.data.Injection
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
 import com.tustar.ushare.util.MobileUtils
@@ -49,7 +50,7 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         setDarkStatusIcon(false)
         setStatusBarColor(R.color.action_bar_bg_color)
 
-        presenter = LoginPresenter(this)
+        presenter = LoginPresenter(this, Injection.provideUserRepository(applicationContext))
         handler = TimerHandler(this)
 
         initViews()
@@ -113,14 +114,23 @@ class LoginActivity : BaseActivity(), LoginContract.View {
 
     override fun showCaptcha(captcha: String) {
         Logger.d("captcha = $captcha")
+
+        val resolver = contentResolver
+        val uri = Uri.parse("content://sms/")
+        val values = ContentValues()
+        values.put("address", "18101024167")
+        values.put("date", System.currentTimeMillis())
+        values.put("type", "1")
+        values.put("body", getString(R.string.login_captcha_notify_text, captcha))
+        resolver.insert(uri, values)
         codeEditText.setText(captcha)
 //        val intent = Intent(this, LoginActivity::class.java).apply {
 //            putExtra(CommonDefine.EXTRA_VCODE, captcha)
 //        }
 //        val pendingIntent = PendingIntent.getActivity(this, 1, intent, 0)
-
+        val channelName = getString(R.string.login_channel_name)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(CommonDefine.CHANNEL_ID, CommonDefine.CHANNEL_NAME,
+            val channel = NotificationChannel(CommonDefine.CHANNEL_ID, channelName,
                     NotificationManager.IMPORTANCE_HIGH)
             channel.description = CommonDefine.CHANNEL_DESCRIPTION
             channel.enableLights(true)

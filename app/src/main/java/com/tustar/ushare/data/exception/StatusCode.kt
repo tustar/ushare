@@ -1,4 +1,4 @@
-package com.tustar.ushare.net.exception
+package com.tustar.ushare.data.exception
 
 object StatusCode {
 

@@ -1,4 +1,4 @@
-package com.tustar.ushare.data.bean
+package com.tustar.ushare.data.entry
 
 object Message {
 

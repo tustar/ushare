@@ -1,33 +1,31 @@
 package com.tustar.ushare.ui.topic
 
 import com.tustar.ushare.R
-import com.tustar.ushare.data.bean.HttpResult
-import com.tustar.ushare.data.bean.Message
-import com.tustar.ushare.net.exception.ExceptionHandler
-import com.tustar.ushare.net.exception.StatusCode
+import com.tustar.ushare.data.entry.Message
+import com.tustar.ushare.data.entry.Response
+import com.tustar.ushare.data.exception.ExceptionHandler
+import com.tustar.ushare.data.exception.StatusCode
+import com.tustar.ushare.data.repository.TopicRepository
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
 
 
-class TopicPresenter(var view: TopicContract.View) : TopicContract.Presenter {
+class TopicPresenter(private val view: TopicContract.View,
+                     private val repo: TopicRepository) : TopicContract.Presenter {
     private var page = 1
 
     init {
         view.presenter = this
     }
 
-    private val model by lazy {
-        TopicModel()
-    }
-
     override fun getTopics() {
-        addSubscription(disposable = model.topicList(page, CommonDefine.PAGE_SIZE)
+        addSubscription(disposable = repo.topicList(page, CommonDefine.PAGE_SIZE)
                 .subscribe({
                     when (it.code) {
-                        HttpResult.OK -> {
+                        Response.OK -> {
                             view.updateTopics(it.data)
                         }
-                        HttpResult.FAILURE -> {
+                        Response.FAILURE -> {
                             when (it.message) {
                                 Message.Unauthorized -> Logger.d("Sign Error")
                                 else -> {

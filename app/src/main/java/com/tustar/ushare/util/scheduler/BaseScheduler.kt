@@ -1,4 +1,4 @@
-package com.tustar.ushare.rx.scheduler
+package com.tustar.ushare.util.scheduler
 
 import io.reactivex.*
 import org.reactivestreams.Publisher

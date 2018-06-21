@@ -1,16 +1,12 @@
-package com.tustar.ushare.net
+package com.tustar.ushare.data.remote
 
-import com.tustar.ushare.util.Logger
 import com.tustar.ushare.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
-import okio.Buffer
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.nio.charset.Charset
 import java.security.KeyStore
 import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
