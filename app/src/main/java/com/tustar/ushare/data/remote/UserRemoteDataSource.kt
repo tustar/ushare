@@ -2,7 +2,7 @@ package com.tustar.ushare.data.remote
 
 import android.support.annotation.VisibleForTesting
 import com.tustar.ushare.UShareApplication
-import com.tustar.ushare.data.entry.Code
+import com.tustar.ushare.data.entry.Captcha
 import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.entry.User
 import com.tustar.ushare.util.CommonDefine
@@ -16,13 +16,13 @@ class UserRemoteDataSource private constructor() {
     /**
      * 获取验证码
      */
-    fun code(mobile: String): Observable<Response<Code, Any>> {
+    fun captcha(mobile: String): Observable<Response<Captcha, Any>> {
         var params = mutableMapOf<String, String>()
         params["mobile"] = mobile
         params["deviceId"] = DeviceUtils.getDeviceId(UShareApplication.context) ?: ""
         params = NetUtils.getSignedParams(params)
 
-        return RetrofitManager.service.sendCode(params)
+        return RetrofitManager.service.captcha(params)
     }
 
     /**
@@ -38,7 +38,7 @@ class UserRemoteDataSource private constructor() {
     }
 
     /**
-     * 登录
+     * 更新权重
      */
     fun weight(weight: Int): Observable<Response<User, Any>> {
         var params = mutableMapOf<String, String>()
@@ -48,7 +48,6 @@ class UserRemoteDataSource private constructor() {
                 CommonDefine.HEAD_ACCESS_TOKEN, "")
         params["mobile"] = mobile
         params[CommonDefine.HEAD_ACCESS_TOKEN] = token
-        params = NetUtils.getSignedParams(params)
         params["weight"] = weight.toString()
         params = NetUtils.getSignedParams(params)
 
@@ -63,6 +62,40 @@ class UserRemoteDataSource private constructor() {
         return RetrofitManager.service.userList()
     }
 
+
+    /**
+     * 更新昵称
+     */
+    fun nick(nick: String): Observable<Response<User, Any>> {
+        var params = mutableMapOf<String, String>()
+        var mobile:String by Preference(UShareApplication.context,
+                CommonDefine.PREF_KEY_USER_MOBILE, "")
+        var token: String by Preference(UShareApplication.context,
+                CommonDefine.HEAD_ACCESS_TOKEN, "")
+        params["mobile"] = mobile
+        params[CommonDefine.HEAD_ACCESS_TOKEN] = token
+        params["nick"] = nick
+        params = NetUtils.getSignedParams(params)
+
+        return RetrofitManager.service.nick(params)
+    }
+
+    /**
+     * 更新昵称
+     */
+    fun info(): Observable<Response<User, Any>> {
+        var params = mutableMapOf<String, String>()
+        var mobile:String by Preference(UShareApplication.context,
+                CommonDefine.PREF_KEY_USER_MOBILE, "")
+        var token: String by Preference(UShareApplication.context,
+                CommonDefine.HEAD_ACCESS_TOKEN, "")
+        params["mobile"] = mobile
+        params[CommonDefine.HEAD_ACCESS_TOKEN] = token
+        params = NetUtils.getSignedParams(params)
+
+
+        return RetrofitManager.service.info(params)
+    }
 
     companion object {
         private var INSTANCE: UserRemoteDataSource? = null

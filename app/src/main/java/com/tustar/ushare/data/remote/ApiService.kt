@@ -1,6 +1,6 @@
 package com.tustar.ushare.data.remote
 
-import com.tustar.ushare.data.entry.Code
+import com.tustar.ushare.data.entry.Captcha
 import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.entry.Topic
 import com.tustar.ushare.data.entry.User
@@ -15,8 +15,8 @@ interface ApiService {
 
     // 发送验证码
     @FormUrlEncoded
-    @POST("v1/user/code")
-    fun sendCode(@FieldMap params: Map<String, String>): Observable<Response<Code, Any>>
+    @POST("v1/user/captcha")
+    fun captcha(@FieldMap params: Map<String, String>): Observable<Response<Captcha, Any>>
 
     // 登录
     @FormUrlEncoded
@@ -28,6 +28,11 @@ interface ApiService {
     @POST("v1/user/weight")
     fun weight(@FieldMap params: Map<String, String>): Observable<Response<User, Any>>
 
+    // 更新权重值
+    @FormUrlEncoded
+    @POST("v1/user/nick")
+    fun nick(@FieldMap params: Map<String, String>): Observable<Response<User, Any>>
+
     // 获取用户列表
     @GET("/v1/user")
     fun userList(): Observable<Response<MutableList<User>, Any>>
@@ -35,4 +40,8 @@ interface ApiService {
     // 获取文章列表
     @GET("/v1/topic")
     fun topicList(): Observable<Response<MutableList<Topic>, Any>>
+
+    // 更新权重值
+    @GET("v1/user/info")
+    fun info(@FieldMap params: Map<String, String>): Observable<Response<User, Any>>
 }

@@ -15,21 +15,21 @@ import com.tustar.ushare.util.Preference
 class MainPresenter(private val view: MainContract.View,
                     private val repo: UserRepository) : MainContract.Presenter {
 
-    private var token: String by Preference(UShareApplication.context,
-            CommonDefine.HEAD_ACCESS_TOKEN, "")
-
     init {
         view.presenter = this
     }
 
 
     override fun onLogin() {
+        var token: String by Preference(UShareApplication.context,
+                CommonDefine.HEAD_ACCESS_TOKEN, "")
         if (token.isNullOrEmpty()) {
             view.toLoginUI()
         }
     }
 
     override fun updateWeight(weight: Int) {
+        Logger.i("weight = $weight")
         addSubscription(disposable = repo.updateWeight(weight).subscribe({
             when (it.code) {
                 Response.OK -> {

@@ -13,7 +13,6 @@ data class User @JvmOverloads constructor(
         @PrimaryKey(autoGenerate = true)
         var id: Long,
         var mobile: String,
-        var captcha: String,
         @Ignore
         val token: String = "",
         var weight: Int = 0,

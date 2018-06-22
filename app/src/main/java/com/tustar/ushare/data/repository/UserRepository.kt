@@ -1,14 +1,10 @@
 package com.tustar.ushare.data.repository
 
-import com.tustar.ushare.UShareApplication
-import com.tustar.ushare.data.entry.Code
+import com.tustar.ushare.data.entry.Captcha
 import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.entry.User
 import com.tustar.ushare.data.local.UserLocalDataSource
 import com.tustar.ushare.data.remote.UserRemoteDataSource
-import com.tustar.ushare.util.CommonDefine
-import com.tustar.ushare.util.NetUtils
-import com.tustar.ushare.util.Preference
 import com.tustar.ushare.util.scheduler.SchedulerUtils
 import io.reactivex.Observable
 
@@ -19,8 +15,8 @@ class UserRepository(val remote: UserRemoteDataSource,
     /**
      * 获取验证码
      */
-    fun code(mobile: String): Observable<Response<Code, Any>> {
-        return remote.code(mobile).compose(SchedulerUtils.ioToMain())
+    fun captcha(mobile: String): Observable<Response<Captcha, Any>> {
+        return remote.captcha(mobile).compose(SchedulerUtils.ioToMain())
     }
 
     /**
@@ -39,6 +35,20 @@ class UserRepository(val remote: UserRemoteDataSource,
 
     fun userList(page: Int, pageSize: Int): Observable<Response<MutableList<User>, Any>> {
         return remote.userList(page, pageSize).compose(SchedulerUtils.ioToMain())
+    }
+
+    /**
+     * 更新权重
+     */
+    fun updateNick(nick: String): Observable<Response<User, Any>> {
+        return remote.nick(nick).compose(SchedulerUtils.ioToMain())
+    }
+
+    /**
+     * 更新权重
+     */
+    fun getUser(): Observable<Response<User, Any>> {
+        return remote.info().compose(SchedulerUtils.ioToMain())
     }
 
     companion object {

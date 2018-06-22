@@ -52,4 +52,13 @@
     <string name="topic_title">标题：</string>
     <string name="topic_desc">描述：</string>
 
+    <!--Mine-->
+    <string name="mine_nick">昵称：</string>
+    <string name="mine_mobile">手机号：</string>
+    <string name="mine_weight">抽签权重：</string>
+    <string name="mine_submit">更新</string>
+    <string name="mine_nick_success">更新昵称成功</string>
+    <string name="mine_nick_err">更新昵称失败</string>
+    <string name="mine_user_success">获取个人信息成功</string>
+    <string name="mine_user_err">获取个人信息失败</string>
 </resources>

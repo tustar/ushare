@@ -40,6 +40,9 @@ class LoginPresenter(private val view: LoginContract.View,
                     var mobile: String by Preference(UShareApplication.context,
                             CommonDefine.PREF_KEY_USER_MOBILE, "")
                     mobile = it.data.mobile
+                    var nick: String by Preference(UShareApplication.context,
+                            CommonDefine.PREF_KEY_USER_NICK, "")
+                    nick = it.data.nick
                     view.toMainUI()
                 }
                 Response.FAILURE -> {
@@ -74,12 +77,12 @@ class LoginPresenter(private val view: LoginContract.View,
         }
 
         view.setCaptchaGetEnable(false)
-        addSubscription(disposable = repo.code(mobile).subscribe({
+        addSubscription(disposable = repo.captcha(mobile).subscribe({
             view.startCaptchaTimer()
             when (it.code) {
                 Response.OK -> {
                     view.showToast(R.string.login_captcha_get_success)
-                    view.showCaptcha(it.data.captcha)
+                    view.showCaptcha(it.data.code)
                 }
                 Response.FAILURE -> {
                     when (it.message) {

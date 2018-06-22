@@ -10,11 +10,11 @@ object Message {
     /**
      * 无效的短信验证码
      */
-    const val INVALID_MSG_CODE = "invalid_msg_code"
+    const val INVALID_CAPTCHA = "invalid_captcha"
     /**
      * 插入失败
      */
-    const val INSERT_FAIL = "insert_fail"
+    const val INSERT_FAILED = "insert_failed"
     /**
      * 无效token
      */

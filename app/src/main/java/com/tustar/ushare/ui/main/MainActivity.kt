@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.airbnb.lottie.LottieAnimationView
 import com.tustar.ushare.R
+import com.tustar.ushare.UShareApplication
 import com.tustar.ushare.base.BaseActivity
 import com.tustar.ushare.data.Injection
 import com.tustar.ushare.ui.login.LoginActivity
@@ -21,6 +22,9 @@ import com.tustar.ushare.ui.mine.MineFragment
 import com.tustar.ushare.ui.mine.MinePresenter
 import com.tustar.ushare.ui.topic.TopicFragment
 import com.tustar.ushare.ui.topic.TopicPresenter
+import com.tustar.ushare.util.CommonDefine
+import com.tustar.ushare.util.Logger
+import com.tustar.ushare.util.Preference
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
 import java.util.*
@@ -54,6 +58,8 @@ class MainActivity : BaseActivity(), MainContract.View {
         presenter = MainPresenter(this, Injection.provideUserRepository(applicationContext))
 
         initViews()
+
+        presenter.onLogin()
     }
 
     override fun setActionBar() {
@@ -119,6 +125,7 @@ class MainActivity : BaseActivity(), MainContract.View {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
+                Logger.d("updateWeight")
                 lottieView.visibility = View.GONE
                 val random = Random(System.currentTimeMillis())
                 presenter.updateWeight(random.nextInt(100))
@@ -137,7 +144,6 @@ class MainActivity : BaseActivity(), MainContract.View {
 
     override fun onResume() {
         super.onResume()
-        presenter.onLogin()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -165,6 +171,13 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     private fun showShakeUI() {
+        var token: String by Preference(UShareApplication.context,
+                CommonDefine.HEAD_ACCESS_TOKEN, "")
+        if (token.isNullOrEmpty()) {
+            toLoginUI()
+            return
+        }
+
         lottieView.visibility = View.VISIBLE
         lottieView.playAnimation()
     }

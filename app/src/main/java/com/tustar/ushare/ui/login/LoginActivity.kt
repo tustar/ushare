@@ -25,6 +25,7 @@ import com.tustar.ushare.data.Injection
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
 import com.tustar.ushare.util.MobileUtils
+import com.tustar.ushare.util.NoFastClickListener
 import org.jetbrains.anko.toast
 import java.lang.ref.WeakReference
 
@@ -85,20 +86,23 @@ class LoginActivity : BaseActivity(), LoginContract.View {
         codeEditText = findViewById(R.id.login_captcha_editText)
 
         loginCodeGet = findViewById(R.id.login_captcha_btn)
-        loginCodeGet.setOnClickListener {
-
-            presenter.sendCaptcha(phoneEditText.text.toString())
-        }
+        loginCodeGet.setOnClickListener(object : NoFastClickListener() {
+            override fun onNoFastClick(v: View) {
+                presenter.sendCaptcha(phoneEditText.text.toString())
+            }
+        })
 
 
         loginSubmit = findViewById(R.id.login_submit)
-        loginSubmit.setOnClickListener {
-            if (!MobileUtils.isMobileOk(phoneEditText.text.toString().trim())) {
-                showToast(R.string.login_phone_err)
-            } else {
-                presenter.login(phoneEditText.text.toString(), codeEditText.text.toString())
+        loginSubmit.setOnClickListener(object : NoFastClickListener() {
+            override fun onNoFastClick(v: View) {
+                if (!MobileUtils.isMobileOk(phoneEditText.text.toString().trim())) {
+                    showToast(R.string.login_phone_err)
+                } else {
+                    presenter.login(phoneEditText.text.toString(), codeEditText.text.toString())
+                }
             }
-        }
+        })
     }
 
     override fun onDestroy() {
