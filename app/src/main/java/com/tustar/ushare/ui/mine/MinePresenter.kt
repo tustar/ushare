@@ -25,7 +25,7 @@ class MinePresenter(private val view: MineContract.View,
         if (token.isNullOrEmpty()) {
             view.toLoginUI()
         } else {
-//            getUserInfo()
+            getUserInfo()
         }
     }
 

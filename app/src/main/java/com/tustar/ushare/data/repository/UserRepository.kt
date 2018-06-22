@@ -45,7 +45,7 @@ class UserRepository(val remote: UserRemoteDataSource,
     }
 
     /**
-     * 更新权重
+     * 获取用户信息
      */
     fun getUser(): Observable<Response<User, Any>> {
         return remote.info().compose(SchedulerUtils.ioToMain())

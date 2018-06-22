@@ -5,10 +5,7 @@ import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.entry.Topic
 import com.tustar.ushare.data.entry.User
 import io.reactivex.Observable
-import retrofit2.http.FieldMap
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 
 interface ApiService {
@@ -43,5 +40,5 @@ interface ApiService {
 
     // 更新权重值
     @GET("v1/user/info")
-    fun info(@FieldMap params: Map<String, String>): Observable<Response<User, Any>>
+    fun info(@QueryMap params: Map<String, String>): Observable<Response<User, Any>>
 }
