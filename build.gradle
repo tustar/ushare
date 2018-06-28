@@ -30,6 +30,9 @@ ext {
 
     // lottie
     lottieVersion = '2.5.5'
+
+    // lifecycle
+    archLifecycleVersion = '1.1.0'
 }
 
 buildscript {

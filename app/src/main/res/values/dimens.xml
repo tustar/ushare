@@ -41,10 +41,10 @@
 
     <!--Login-->
     <dimen name="login_divider_height">2px</dimen>
-    <dimen name="login_phone_prefix_width">46dp</dimen>
-    <dimen name="login_phone_prefix_height">24dp</dimen>
+    <dimen name="login_mobile_prefix_width">46dp</dimen>
+    <dimen name="login_mobile_prefix_height">24dp</dimen>
     <dimen name="login_label_text_size">16sp</dimen>
-    <dimen name="login_phone_text_margin">17dp</dimen>
+    <dimen name="login_mobile_text_margin">17dp</dimen>
     <dimen name="login_btn_margin_top">20dp</dimen>
     <dimen name="login_license_margin_top">14dp</dimen>
     <dimen name="login_license_text_size">11sp</dimen>

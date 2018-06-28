@@ -11,9 +11,9 @@
 
     <!--Login-->
     <string name="login_title">登录</string>
-    <string name="login_phone_prefix">+86</string>
-    <string name="login_phone_hint">请输入手机号</string>
-    <string name="login_phone_err">请输入正确的手机号</string>
+    <string name="login_mobile_prefix">+86</string>
+    <string name="login_mobile_hint">请输入手机号</string>
+    <string name="login_mobile_err">请输入正确的手机号</string>
     <string name="login_captcha_hint">短信验证码</string>
     <string name="login_captcha_get">获取验证码</string>
     <string name="login_captcha_timer">重新获取%1$ds</string>
