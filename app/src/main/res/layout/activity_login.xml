@@ -63,7 +63,7 @@
                 android:inputType="phone"
                 android:maxLength="11"
                 android:onTextChanged="@{vm::onMobileTextChanged}"
-                android:text="@{vm.mobile}"
+                android:text="@={vm.mobile}"
                 android:textColor="@color/input_text_color"
                 android:textColorHint="@color/hint_color"
                 android:textSize="@dimen/input_text_size" />
@@ -74,8 +74,8 @@
                 android:layout_height="@dimen/clear_image_height"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="0dp"
-                android:onClick="@{vm::clearMobileText}"
                 android:background="@null"
+                android:onClick="@{vm::clearMobileText}"
                 android:src="@drawable/ic_clear"
                 android:visibility="@{vm.mobileClear, default=invisible}" />
         </LinearLayout>
@@ -103,6 +103,7 @@
                 android:hint="@string/login_captcha_hint"
                 android:inputType="number"
                 android:maxLength="6"
+                android:text="@={vm.captcha}"
                 android:textColor="@color/input_text_color"
                 android:textColorHint="@color/hint_color"
                 android:textSize="@dimen/input_text_size" />
@@ -113,9 +114,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
                 android:layout_marginRight="0dp"
+                android:enabled="@{vm.captchaGetEnable}"
+                android:onClickListener="@{vm.onClickSendListener}"
                 android:paddingBottom="2dp"
                 android:paddingTop="2dp"
-                android:text="@string/login_captcha_get"
+                android:text="@{vm.captchaGetText ?? @string/login_captcha_get}"
                 android:textColor="@color/selector_code_btn_text_color"
                 android:textSize="@dimen/login_label_text_size" />
         </LinearLayout>

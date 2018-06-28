@@ -7,7 +7,7 @@ object CommonDefine {
 
     //
     const val HEAD_ACCESS_TOKEN: String = "token"
-    const val CODE_TIMER = 60
+    const val CODE_TIMER = 60L
     const val CHANNEL_ID = "channel_id"
     const val CHANNEL_DESCRIPTION = ""
 
