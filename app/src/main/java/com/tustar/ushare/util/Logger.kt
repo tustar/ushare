@@ -8,7 +8,7 @@ import android.util.Log
  */
 object Logger {
 
-    private const val APP_TAG = "TuDemo"
+    private const val APP_TAG = "UShare"
 
     private val packageName = Logger::class.java.name
 
