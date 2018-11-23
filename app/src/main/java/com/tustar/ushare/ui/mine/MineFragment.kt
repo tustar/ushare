@@ -3,19 +3,18 @@ package com.tustar.ushare.ui.mine
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.User
-import com.tustar.ushare.ui.login.LoginActivity
+import com.tustar.ushare.ui.HomeActivity
 import com.tustar.ushare.util.NoFastClickListener
 import org.jetbrains.anko.find
-import org.jetbrains.anko.support.v4.toast
 
 
 class MineFragment : Fragment(), MineContract.View {
@@ -63,7 +62,7 @@ class MineFragment : Fragment(), MineContract.View {
     }
 
     override fun showToast(resId: Int) {
-        toast(resId)
+//        toast(resId)
     }
 
     override fun onAttach(context: Context) {
@@ -81,7 +80,7 @@ class MineFragment : Fragment(), MineContract.View {
     }
 
     override fun toLoginUI() {
-        val intent = Intent(activity, LoginActivity::class.java).apply {
+        val intent = Intent(activity, HomeActivity::class.java).apply {
 
         }
         startActivity(intent)

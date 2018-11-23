@@ -1,6 +1,6 @@
 package com.tustar.ushare.data.remote
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.tustar.ushare.UShareApplication
 import com.tustar.ushare.data.entry.Captcha
 import com.tustar.ushare.data.entry.Response

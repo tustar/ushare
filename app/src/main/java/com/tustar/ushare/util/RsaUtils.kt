@@ -45,7 +45,7 @@ class RsaUtils private constructor() {
          */
         private fun createLinkString(parameters: Map<String, String>): String {
             val keys = ArrayList(parameters.keys)
-            Collections.sort(keys)
+            keys.sort()
             val sb = StringBuffer()
             for (i in keys.indices) {
                 val key = keys[i]

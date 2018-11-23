@@ -5,8 +5,8 @@ import com.tustar.ushare.UShareApplication
 
 object NetUtils {
 
-    const val PARTNER = "com.tustar.ushare"
-    const val UTF_8 = "utf-8"
+    private const val PARTNER = "com.tustar.ushare"
+    private const val UTF_8 = "utf-8"
     const val SIGN = "sign"
 
     private fun getBasicParams(): MutableMap<String, String> {

@@ -1,6 +1,6 @@
 package com.tustar.ushare.data.local.dao
 
-import android.arch.persistence.room.Dao
+import androidx.room.Dao
 
 @Dao
 interface TopicDao

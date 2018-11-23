@@ -1,6 +1,6 @@
 package com.tustar.ushare.data.local.dao
 
-import android.arch.persistence.room.*
+import androidx.room.*
 import com.tustar.ushare.data.entry.User
 import io.reactivex.Flowable
 

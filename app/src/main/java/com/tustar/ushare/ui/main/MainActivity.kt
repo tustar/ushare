@@ -3,19 +3,19 @@ package com.tustar.ushare.ui.main
 import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.view.ViewPager
-import android.support.v7.widget.Toolbar
+import com.google.android.material.tabs.TabLayout
+import androidx.appcompat.widget.Toolbar
 import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
 import com.tustar.ushare.base.BaseActivity
 import com.tustar.ushare.data.Injection
-import com.tustar.ushare.ui.login.LoginActivity
+import com.tustar.ushare.ui.HomeActivity
 import com.tustar.ushare.ui.lot.LotFragment
 import com.tustar.ushare.ui.lot.LotPresenter
 import com.tustar.ushare.ui.mine.MineFragment
@@ -156,7 +156,7 @@ class MainActivity : BaseActivity(), MainContract.View {
     }
 
     override fun toLoginUI() {
-        val intent = Intent(this, LoginActivity::class.java).apply {
+        val intent = Intent(this, HomeActivity::class.java).apply {
 
         }
         startActivity(intent)

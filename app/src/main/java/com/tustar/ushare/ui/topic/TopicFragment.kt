@@ -2,12 +2,10 @@ package com.tustar.ushare.ui.topic
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.Topic
 import com.tustar.ushare.util.Logger
@@ -18,7 +16,7 @@ import org.jetbrains.anko.support.v4.toast
 class TopicFragment : Fragment(), TopicContract.View, TopicAdapter.OnItemClickListener {
 
     override lateinit var presenter: TopicContract.Presenter
-    private lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
     private lateinit var adapter: TopicAdapter
     private var topics = arrayListOf<Topic>()
 
@@ -41,7 +39,7 @@ class TopicFragment : Fragment(), TopicContract.View, TopicAdapter.OnItemClickLi
 
     private fun initRecycleView(view: View) {
         recyclerView = view.find(R.id.topic_recycle_view)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         adapter = TopicAdapter(topics)
         adapter.setOnItemClickListener(this)
         recyclerView.adapter = adapter

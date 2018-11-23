@@ -1,10 +1,10 @@
 package com.tustar.ushare.ui.topic
 
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.Topic
 import org.jetbrains.anko.find
@@ -33,7 +33,7 @@ class TopicAdapter(var topics: MutableList<Topic>) : RecyclerView.Adapter<TopicA
     }
 
 
-    inner class ViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private lateinit var userId: TextView
         private lateinit var title: TextView

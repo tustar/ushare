@@ -4,13 +4,13 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.databinding.ObservableBoolean
-import android.databinding.ObservableField
-import android.databinding.ObservableInt
+import androidx.databinding.ObservableBoolean
+import androidx.databinding.ObservableField
+import androidx.databinding.ObservableInt
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.support.v4.app.NotificationCompat
-import android.support.v4.app.NotificationManagerCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import android.view.View
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseViewModel
@@ -206,7 +206,7 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
 
     private fun showCaptcha(code: String) {
         captcha.set(code)
-//        val intent = Intent(this, LoginActivity::class.java).apply {
+//        val intent = Intent(this, HomeActivity::class.java).apply {
 //            putExtra(CommonDefine.EXTRA_VCODE, captcha)
 //        }
 //        val pendingIntent = PendingIntent.getActivity(this, 1, intent, 0)

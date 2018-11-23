@@ -2,10 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
 
@@ -17,7 +18,7 @@ android {
         versionCode 1
         versionName "1.0.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -63,19 +64,17 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     // databinding
-    kapt "com.android.databinding:compiler:$gradlePluginVersion"
+//    kapt 'androidx.databinding:databinding-compiler:3.4.0-alpha01'
 
     // support
-    implementation "com.android.support.constraint:constraint-layout:" +
-            "$rootProject.constraintLayoutVersion"
-    implementation "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:design:$rootProject.supportLibraryVersion"
-    implementation "com.android.support:cardview-v7:$rootProject.supportLibraryVersion"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
     // anko
-    implementation "org.jetbrains.anko:anko-commons:$rootProject.ankoVersion"
-    implementation "org.jetbrains.anko:anko-support-v4-commons:$rootProject.ankoVersion"
+    implementation "org.jetbrains.anko:anko:$rootProject.ankoVersion"
 
     // retrofit2
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
@@ -89,22 +88,30 @@ dependencies {
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
 
     // room
-    implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
-    kapt "android.arch.persistence.room:compiler:$rootProject.roomVersion"
-    implementation "android.arch.persistence.room:rxjava2:$rootProject.roomVersion"
-    implementation "android.arch.persistence.room:guava:$rootProject.roomVersion"
-    testImplementation "android.arch.persistence.room:testing:$rootProject.roomVersion"
+    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
+    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
+    implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'
+    implementation 'androidx.room:room-guava:2.1.0-alpha01'
+    testImplementation 'androidx.room:room-testing:2.1.0-alpha01'
 
     // lifecycle
-    implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
-    kapt "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
 
     //
     testImplementation "junit:junit:$rootProject.junitVersion"
-    androidTestImplementation "com.android.support.test:runner:$rootProject.runnerVersion"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:" +
-            "$rootProject.espressoVersion"
+    androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'
 
     // lottie
     implementation "com.airbnb.android:lottie:$rootProject.lottieVersion"
+
+    // navigation
+    def nav_version = "1.0.0-alpha06"
+
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version" // use -ktx for Kotlin
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // use -ktx for Kotlin
+
+    // optional - Test helpers
+    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:$nav_version" // use -ktx for Kotlin
 }

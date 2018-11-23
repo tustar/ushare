@@ -1,6 +1,6 @@
 package com.tustar.ushare.data.local
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import com.tustar.ushare.data.entry.User
 import com.tustar.ushare.data.local.dao.UserDao
 import io.reactivex.Flowable
