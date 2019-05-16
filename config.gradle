@@ -1,0 +1,169 @@
+ext {
+    versions = [
+            compileSdk: 28,
+            targetSdk : 28,
+            minmumSdk : 26,
+            buildTools: "28.0.3",
+
+            test      : [
+                    junit   : "4.12",
+                    runner  : "1.1.1",
+                    espresso: "3.1.1"
+            ],
+
+            kotlin    : [
+                    stdLib    : "1.3.21",
+                    coroutines: "1.1.0",
+                    anko      : "0.10.8"
+            ],
+
+            androidx  : [
+                    lib             : "1.0.0",
+                    constraintlayout: "1.1.3",
+
+                    lifecycle       : "2.0.0",
+                    room            : "2.0.0",
+                    paging          : "2.1.0-rc01",
+                    navigation      : "2.0.0",
+                    workManager     : "2.0.0-rc01"
+            ],
+
+            rx        : [
+                    java          : "2.2.5",
+                    android       : "2.1.0",
+                    kotlin        : "2.3.0",
+                    binding       : "2.2.0",
+                    permissions   : "0.10.2",
+                    activityResult: "0.5.0-2.x"
+            ],
+
+            json      : [
+                    gson: "2.8.5"
+            ],
+
+            image     : [
+                    glide: "4.8.0",
+
+            ],
+
+            anim      : [
+                    lottie: "3.0.2"
+            ],
+
+            network   : [
+                    retrofit: "2.5.0",
+                    okhttp  : "3.10.0",
+            ]
+    ]
+
+    deps = [
+            test    : [
+                    junit  : "junit:junit:${versions.test.junit}",
+                    android: [
+                            runner  : "androidx.test:runner:${versions.test.runner}",
+                            expresso: "androidx.test.espresso:espresso-core:${versions.test.espresso}"
+                    ]
+            ],
+
+            kotlin  : [
+                    stdLib    : "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin.stdLib}",
+                    reflect   : "org.jetbrains.kotlin:kotlin-reflect:${versions.kotlin.stdLib}",
+                    coroutines: [
+                            core   : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.kotlin.coroutines}",
+                            android: "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.kotlin.coroutines}"
+                    ],
+                    anko      : [
+                            commons: "org.jetbrains.anko:anko-commons:${versions.kotlin.anko}",
+                            v4     : "org.jetbrains.anko:anko-support-v4-commons:${versions.kotlin.anko}",
+                            v7     : "org.jetbrains.anko:anko-appcompat-v7-commons:${versions.kotlin.anko}",
+                            sdk25  : "org.jetbrains.anko:anko-sdk25:${versions.kotlin.anko}",
+                            design : "org.jetbrains.anko:anko-design:${versions.kotlin.anko}"
+                    ]
+            ],
+
+            androidx: [
+                    appcompat       : "androidx.appcompat:appcompat:${versions.androidx.lib}",
+                    recyclerview    : "androidx.recyclerview:recyclerview:${versions.androidx.lib}",
+                    ktx             : "androidx.core:core-ktx:${versions.androidx.lib}",
+                    cardview        : "androidx.cardview:cardview:${versions.androidx.lib}",
+                    annotation      : "androidx.annotation:annotation:${versions.androidx.lib}",
+
+                    constraintlayout: "androidx.constraintlayout:constraintlayout:${versions.androidx.constraintlayout}",
+
+                    vectordrawable  : [
+                            drawable: "androidx.vectordrawable:vectordrawable:${versions.androidx.lib}",
+                            animated: "androidx.vectordrawable:vectordrawable-animated:${versions.androidx.lib}"
+                    ],
+
+                    legacy          : [
+                            v4: "androidx.legacy:legacy-support-v4:${versions.androidx.lib}"
+                    ],
+
+                    lifecycle       : [
+                            extensions     : "androidx.lifecycle:lifecycle-extensions:${versions.androidx.lifecycle}",
+                            liveData       : "androidx.lifecycle:lifecycle-livedata:${versions.androidx.lifecycle}",
+                            viewModel      : "androidx.lifecycle:lifecycle-viewmodel:${versions.androidx.lifecycle}",
+                            reactivestreams: "androidx.lifecycle:lifecycle-reactivestreams:${versions.androidx.lifecycle}"
+                    ],
+                    room            : [
+                            runtime   : "androidx.room:room-runtime:${versions.androidx.room}",
+                            runtimeKtx: "androidx.room:room-runtime-ktx:${versions.androidx.room}",
+                            compiler  : "androidx.room:room-compiler:${versions.androidx.room}",
+                            rxjava2   : "androidx.room:room-rxjava2:${versions.androidx.room}"
+                    ],
+                    paging          : [
+                            runtime   : "androidx.paging:paging-runtime:${versions.androidx.paging}",
+                            rxjava2   : "androidx.paging:paging-rxjava2:${versions.androidx.paging}",
+                            runtimeKtx: "androidx.paging:paging-runtime-ktx:${versions.androidx.paging}"
+                    ],
+                    navigation      : [
+                            fragment   : "androidx.navigation:navigation-fragment:${versions.androidx.navigation}",
+                            fragmentKtx: "androidx.navigation:navigation-fragment-ktx:${versions.androidx.navigation}",
+                            ui         : "androidx.navigation:navigation-ui:${versions.androidx.navigation}",
+                            uiKtx      : "androidx.navigation:navigation-ui-ktx:${versions.androidx.navigation}"
+                    ],
+                    workManager     : [
+                            runtime   : "androidx.work:work-runtime:${versions.androidx.workManager}",
+                            runtimeKtx: "androidx.work:work-runtime-ktx:${versions.androidx.workManager}",
+                            rxjava2   : "androidx.work:work-rxjava2:${versions.androidx.workManager}"
+                    ]
+            ],
+
+            rx      : [
+                    java          : "io.reactivex.rxjava2:rxjava:${versions.rx.java}",
+                    android       : "io.reactivex.rxjava2:rxandroid:${versions.rx.android}",
+                    kotlin        : "io.reactivex.rxjava2:rxkotlin:${versions.rx.kotlin}",
+                    binding       : [
+                            appcompatV7: "com.jakewharton.rxbinding2:rxbinding-appcompat-v7:${versions.rx.binding}"
+                    ],
+                    permissions   : "com.github.tbruyelle:rxpermissions:${versions.rx.permissions}",
+                    activityResult: "com.github.VictorAlbertos:RxActivityResult:${versions.rx.activityResult}"
+            ],
+
+            json    : [
+                    gson: "com.google.code.gson:gson:${versions.json.gson}"
+            ],
+
+            image   : [
+                    glide: [
+                            glide   : "com.github.bumptech.glide:glide:${versions.image.glide}",
+                            compiler: "com.github.bumptech.glide:compiler:${versions.image.glide}"
+                    ],
+
+            ],
+            anim    : [
+                    lottie: "com.airbnb.android:lottie:${versions.anim.lottie}"
+            ],
+
+            network : [
+                    retrofit2: [
+                            retrofit            : "com.squareup.retrofit2:retrofit:${versions.network.retrofit}",
+                            gsonConverterFactory: "com.squareup.retrofit2:converter-gson:${versions.network.retrofit}",
+                            adapterRxjava2      : "com.squareup.retrofit2:adapter-rxjava2:${versions.network.retrofit}"
+                    ],
+                    okhttp3:[
+                            logging:"com.squareup.okhttp3:logging-interceptor:${versions.network.okhttp}",
+                    ]
+            ]
+    ]
+}

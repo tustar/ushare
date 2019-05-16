@@ -5,16 +5,15 @@ apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs"
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion '28.0.3'
+    compileSdkVersion rootProject.ext.versions.compileSdk
+    buildToolsVersion rootProject.ext.versions.buildTools
 
     defaultConfig {
 
         applicationId "com.tustar.ushare"
 
-        minSdkVersion rootProject.ext.minSdkVersion
-        targetSdkVersion rootProject.ext.targetSdkVersion
-
+        minSdkVersion rootProject.ext.versions.minSdk
+        targetSdkVersion rootProject.ext.versions.targetSdk
         versionCode 1
         versionName "1.0.0"
 
@@ -26,6 +25,13 @@ android {
             }
         }
 
+        vectorDrawables.useSupportLibrary = true
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+
+        }
     }
 
     buildTypes {
@@ -60,58 +66,51 @@ dependencies {
     // libs
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    // kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-
-    // databinding
-//    kapt 'androidx.databinding:databinding-compiler:3.4.0-alpha01'
-
-    // support
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
-
-    // anko
-    implementation "org.jetbrains.anko:anko:$rootProject.ankoVersion"
-
-    // retrofit2
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.retrofitVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:" +
-            "$rootProject.loggingInterceptorVersion"
-
-    // rxjava2
-    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxandroidVersion"
-    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxjavaVersion"
-
-    // room
-    implementation 'androidx.room:room-runtime:2.1.0-alpha01'
-    kapt 'androidx.room:room-compiler:2.1.0-alpha01'
-    implementation 'androidx.room:room-rxjava2:2.1.0-alpha01'
-    implementation 'androidx.room:room-guava:2.1.0-alpha01'
-    testImplementation 'androidx.room:room-testing:2.1.0-alpha01'
-
-    // lifecycle
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
-    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
-
-    //
-    testImplementation "junit:junit:$rootProject.junitVersion"
-    androidTestImplementation 'androidx.test:runner:1.1.0-beta02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'
+    // Test
+    testImplementation rootProject.ext.deps.test.junit
+    // Android Test
+    androidTestImplementation rootProject.ext.deps.test.android.runner
+    androidTestImplementation rootProject.ext.deps.test.android.expresso
+    // AndroidX
+    implementation rootProject.ext.deps.androidx.appcompat
+    implementation rootProject.ext.deps.androidx.recyclerview
+    implementation rootProject.ext.deps.androidx.cardview
+    implementation rootProject.ext.deps.androidx.constraintlayout
+    implementation rootProject.ext.deps.androidx.annotation
+    implementation rootProject.ext.deps.androidx.ktx
+    // AndroidX-Lifecycle
+    implementation rootProject.ext.deps.androidx.lifecycle.extensions
+    implementation rootProject.ext.deps.androidx.lifecycle.reactivestreams
+    // AndroidX-Navigation-ktx
+    implementation rootProject.ext.deps.androidx.navigation.fragmentKtx
+    implementation rootProject.ext.deps.androidx.navigation.uiKtx
+    // AndroidX-Paging
+    implementation rootProject.ext.deps.androidx.paging.runtimeKtx
+    implementation rootProject.ext.deps.androidx.paging.rxjava2
+    // Kotlin
+    implementation rootProject.ext.deps.kotlin.stdLib
+    implementation rootProject.ext.deps.kotlin.anko.commons
+    implementation rootProject.ext.deps.kotlin.anko.v4
+    implementation rootProject.ext.deps.kotlin.anko.v7
+    implementation rootProject.ext.deps.kotlin.coroutines.core
+    implementation rootProject.ext.deps.kotlin.coroutines.android
+    // Rx
+    implementation rootProject.ext.deps.rx.java
+    implementation rootProject.ext.deps.rx.android
+    implementation rootProject.ext.deps.rx.kotlin
+    implementation rootProject.ext.deps.rx.binding.appcompatV7
+    implementation rootProject.ext.deps.rx.permissions
+    implementation rootProject.ext.deps.rx.activityResult
+    // Network
+    implementation rootProject.ext.deps.network.retrofit2.retrofit
+    implementation rootProject.ext.deps.network.retrofit2.gsonConverterFactory
+    implementation rootProject.ext.deps.network.retrofit2.adapterRxjava2
+    implementation rootProject.ext.deps.network.okhttp3.logging
+    // AndroidX-Room
+    api rootProject.ext.deps.androidx.room.runtime
+    kapt rootProject.ext.deps.androidx.room.compiler
+    implementation rootProject.ext.deps.androidx.room.rxjava2
 
     // lottie
-    implementation "com.airbnb.android:lottie:$rootProject.lottieVersion"
-
-    // navigation
-    def nav_version = "1.0.0-alpha06"
-
-    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version" // use -ktx for Kotlin
-    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version" // use -ktx for Kotlin
-
-    // optional - Test helpers
-    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:$nav_version" // use -ktx for Kotlin
+    implementation rootProject.ext.deps.anim.lottie
 }

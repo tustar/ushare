@@ -15,6 +15,7 @@ import com.tustar.ushare.util.Logger
 import com.tustar.ushare.util.setupActionBar
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
+import java.nio.file.Files.find
 
 
 open class BaseActivity : AppCompatActivity() {
