@@ -105,6 +105,7 @@ dependencies {
     implementation rootProject.ext.deps.network.retrofit2.retrofit
     implementation rootProject.ext.deps.network.retrofit2.gsonConverterFactory
     implementation rootProject.ext.deps.network.retrofit2.adapterRxjava2
+    implementation rootProject.ext.deps.network.retrofit2.adapterCoroutines
     implementation rootProject.ext.deps.network.okhttp3.logging
     // AndroidX-Room
     api rootProject.ext.deps.androidx.room.runtime
