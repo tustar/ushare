@@ -10,12 +10,11 @@ import android.view.Window
 import android.widget.ImageButton
 import android.widget.TextView
 import com.tustar.ushare.R
+import com.tustar.ushare.ktx.setupActionBar
 import com.tustar.ushare.util.ActivityCollector
 import com.tustar.ushare.util.Logger
-import com.tustar.ushare.util.setupActionBar
 import org.jetbrains.anko.find
 import org.jetbrains.anko.toast
-import java.nio.file.Files.find
 
 
 open class BaseActivity : AppCompatActivity() {

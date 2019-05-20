@@ -1,20 +1,23 @@
 package com.tustar.ushare.ui.login
 
-import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.view.View
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.databinding.ObservableBoolean
 import androidx.databinding.ObservableField
 import androidx.databinding.ObservableInt
-import android.graphics.BitmapFactory
-import android.graphics.Color
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
-import android.view.View
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.tustar.ushare.R
+import com.tustar.ushare.SingleLiveEvent
+import com.tustar.ushare.UShareApplication.Companion.context
+import com.tustar.ushare.ViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
-import com.tustar.ushare.data.Injection
 import com.tustar.ushare.data.entry.Message
 import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.exception.ExceptionHandler
@@ -27,15 +30,7 @@ import io.reactivex.subscribers.DisposableSubscriber
 import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit
 
-class LoginViewModel(application: Application) : BaseViewModel(application) {
-
-    private val repo: UserRepository
-    private val context: Context
-
-    init {
-        context = application
-        repo = Injection.provideUserRepository(application)
-    }
+class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
 
     val mobile = ObservableField<String>()
     val mobileClear = ObservableInt(View.INVISIBLE)
@@ -74,7 +69,7 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
             return
         }
 
-        addSubscription(disposable = repo.captcha(mobile!!)
+        addDisposable(disposable = repo.captcha(mobile!!)
                 .doOnSubscribe {
                     captchaGetEnable.set(false)
                 }
@@ -123,7 +118,7 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
             return
         }
 
-        addSubscription(disposable = repo.login(mobile!!, captcha!!)
+        addDisposable(disposable = repo.login(mobile!!, captcha!!)
                 .doOnSubscribe {
                     submitEnable.set(false)
                 }
@@ -170,7 +165,7 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
     private fun startCaptchaTimer() {
         Logger.d()
         val count = CommonDefine.CODE_TIMER
-        addSubscription(disposable = Flowable.interval(0, 1, TimeUnit.SECONDS)
+        addDisposable(disposable = Flowable.interval(0, 1, TimeUnit.SECONDS)
                 .onBackpressureBuffer()
                 .take(count)
                 .map {
@@ -242,5 +237,14 @@ class LoginViewModel(application: Application) : BaseViewModel(application) {
         val notification = builder.build()
         val nm = NotificationManagerCompat.from(context)
         nm.notify((System.currentTimeMillis() / 1000L).toInt(), notification)
+    }
+
+    companion object {
+
+        fun get(fragment: Fragment): LoginViewModel {
+            val application = checkApplication(checkActivity(fragment))
+            return ViewModelProviders.of(fragment, ViewModelFactory.getInstance(application))
+                    .get(LoginViewModel::class.java)
+        }
     }
 }

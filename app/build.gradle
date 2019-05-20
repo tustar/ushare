@@ -101,6 +101,8 @@ dependencies {
     implementation rootProject.ext.deps.rx.binding.appcompatV7
     implementation rootProject.ext.deps.rx.permissions
     implementation rootProject.ext.deps.rx.activityResult
+    implementation rootProject.ext.deps.rx.autodispose.android
+    implementation rootProject.ext.deps.rx.autodispose.archcomponents
     // Network
     implementation rootProject.ext.deps.network.retrofit2.retrofit
     implementation rootProject.ext.deps.network.retrofit2.gsonConverterFactory

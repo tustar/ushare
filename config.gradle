@@ -140,8 +140,12 @@ ext {
                     ],
                     permissions   : "com.github.tbruyelle:rxpermissions:${versions.rx.permissions}",
                     activityResult: "com.github.VictorAlbertos:RxActivityResult:${versions.rx.activityResult}",
-                    autodispose   : "com.uber.autodispose:autodispose-android-archcomponents:${versions.rx.autodispose}"
+                    autodispose   : [
+                            android    : "com.uber.autodispose:autodispose-android:${versions.rx.autodispose}",
+                            archcomponents: "com.uber.autodispose:autodispose-android-archcomponents:${versions.rx.autodispose}"
+                    ],
             ],
+
 
             json    : [
                     gson: "com.google.code.gson:gson:${versions.json.gson}"

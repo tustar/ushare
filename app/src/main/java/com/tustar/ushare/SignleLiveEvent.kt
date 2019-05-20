@@ -1,9 +1,10 @@
-package com.tustar.ushare.util
+package com.tustar.ushare
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.annotation.MainThread
+import com.tustar.ushare.util.Logger
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
