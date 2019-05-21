@@ -1,5 +1,6 @@
 package com.tustar.ushare.ui.login
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -24,6 +25,7 @@ import com.tustar.ushare.data.exception.ExceptionHandler
 import com.tustar.ushare.data.exception.StatusCode
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.util.*
+import com.uber.autodispose.autoDisposable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subscribers.DisposableSubscriber
@@ -69,13 +71,14 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
             return
         }
 
-        addDisposable(disposable = repo.captcha(mobile!!)
+      repo.captcha(mobile!!)
                 .doOnSubscribe {
                     captchaGetEnable.set(false)
                 }
                 .doOnComplete {
                     captchaGetEnable.set(true)
                 }
+              .autoDisposable(this)
                 .subscribe({
                     when (it.code) {
                         Response.OK -> {
@@ -103,7 +106,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                         StatusCode.SERVER_ERROR -> context.toast(R.string.server_err)
                         else -> context.toast(R.string.login_captcha_get_err)
                     }
-                })
+                }
     }
 
     fun login(mobile: String?, captcha: String?) {
@@ -118,13 +121,14 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
             return
         }
 
-        addDisposable(disposable = repo.login(mobile!!, captcha!!)
+        repo.login(mobile!!, captcha!!)
                 .doOnSubscribe {
                     submitEnable.set(false)
                 }
                 .doOnComplete {
                     submitEnable.set(true)
                 }
+                .autoDisposable(this)
                 .subscribe({
                     when (it.code) {
                         Response.OK -> {
@@ -159,13 +163,14 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                         StatusCode.SERVER_ERROR -> context.toast(R.string.server_err)
                         else -> context.toast(R.string.login_submit_err)
                     }
-                })
+                }
     }
 
+    @SuppressLint("CheckResult")
     private fun startCaptchaTimer() {
         Logger.d()
         val count = CommonDefine.CODE_TIMER
-        addDisposable(disposable = Flowable.interval(0, 1, TimeUnit.SECONDS)
+         Flowable.interval(0, 1, TimeUnit.SECONDS)
                 .onBackpressureBuffer()
                 .take(count)
                 .map {
@@ -178,6 +183,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                 .doOnTerminate {
                     captchaGetEnable.set(true)
                 }
+                 .autoDisposable(this)
                 .subscribeWith(object : DisposableSubscriber<Long>() {
 
                     override fun onNext(timer: Long?) {
@@ -195,7 +201,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                         Logger.d()
                         t?.printStackTrace()
                     }
-                }))
+                })
 
     }
 

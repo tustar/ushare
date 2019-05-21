@@ -38,7 +38,7 @@ class RetrofitManager {
                 return retrofit.create(ApiService::class.java)
             }
 
-        private fun getClient(): OkHttpClient? {
+        private fun getClient(): OkHttpClient {
             val trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
             trustManagerFactory.init(null as KeyStore?)
             val trustManagers = trustManagerFactory.trustManagers

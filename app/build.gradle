@@ -12,8 +12,8 @@ android {
 
         applicationId "com.tustar.ushare"
 
-        minSdkVersion rootProject.ext.versions.minSdk
-        targetSdkVersion rootProject.ext.versions.targetSdk
+        minSdkVersion 26
+        targetSdkVersion 28
         versionCode 1
         versionName "1.0.0"
 
@@ -32,6 +32,8 @@ android {
             targetCompatibility JavaVersion.VERSION_1_8
 
         }
+
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -61,10 +63,22 @@ android {
 
 }
 
+project.tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+//        freeCompilerArgs = [
+//                "-Xjsr305=strict",
+//                "-progressive"
+//        ]
+        jvmTarget = "1.8"
+    }
+}
+
 dependencies {
 
     // libs
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation 'com.android.support:multidex:1.0.3'
 
     // Test
     testImplementation rootProject.ext.deps.test.junit
