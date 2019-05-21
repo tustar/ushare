@@ -12,6 +12,21 @@ data class Response<out D, out E>(
     }
 }
 
+fun <D, E> Response<out D, out E>.execute(ok: (D) -> Unit,
+                                          failure: (String) -> Unit,
+                                          other: ((D) -> Unit)? = null) {
+    when (code) {
+        Response.OK -> {
+            ok(data)
+        }
+        Response.FAILURE -> {
+            failure(message)
+        }
+        else -> {
+            other?.invoke(data)
+        }
+    }
+}
 
 
 

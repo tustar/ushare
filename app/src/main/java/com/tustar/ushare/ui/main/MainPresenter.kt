@@ -2,10 +2,9 @@ package com.tustar.ushare.ui.main
 
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
-import com.tustar.ushare.data.entry.Message
-import com.tustar.ushare.data.entry.Response
-import com.tustar.ushare.data.exception.ExceptionHandler
-import com.tustar.ushare.data.exception.StatusCode
+import com.tustar.ushare.data.entry.execute
+import com.tustar.ushare.data.helper.Message
+import com.tustar.ushare.data.helper.StatusCode
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
@@ -31,30 +30,21 @@ class MainPresenter(private val view: MainContract.View,
     override fun updateWeight(weight: Int) {
         Logger.i("weight = $weight")
         addSubscription(disposable = repo.updateWeight(weight).subscribe({
-            when (it.code) {
-                Response.OK -> {
-                    view.showToast(R.string.lot_weight_success)
-                    view.updateLotUI()
-                }
-                Response.FAILURE -> {
-                    when (it.message) {
-                        Message.Unauthorized -> Logger.d("Sign Error")
-                        else -> view.showToast(R.string.lot_weight_err)
+            it.execute(
+                    ok = {
+                        view.showToast(R.string.lot_weight_success)
+                        view.updateLotUI()
+                    },
+                    failure = { message ->
+                        Message.handleFailure(message) {
+                            view.showToast(R.string.lot_weight_err)
+                        }
                     }
-                }
-                else -> {
-                    // 更多情况
-                }
-            }
+            )
         }) {
             //
-            val code = ExceptionHandler.handleException(it)
-            when (code) {
-                StatusCode.SOCKET_TIMEOUT_ERROR -> view.showToast(R.string.socket_timeout_error)
-                StatusCode.CONNECT_ERROR -> view.showToast(R.string.connect_error)
-                StatusCode.UNKNOWN_HOST_ERROR -> view.showToast(R.string.unkown_host_error)
-                StatusCode.SERVER_ERROR -> view.showToast(R.string.server_err)
-                else -> view.showToast(R.string.lot_weight_err)
+            StatusCode.handleException(it) {
+                R.string.lot_weight_err
             }
         })
     }

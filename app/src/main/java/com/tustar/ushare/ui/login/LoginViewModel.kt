@@ -23,10 +23,10 @@ import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication.Companion.context
 import com.tustar.ushare.ViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
-import com.tustar.ushare.data.entry.Message
 import com.tustar.ushare.data.entry.Response
-import com.tustar.ushare.data.exception.ExceptionHandler
-import com.tustar.ushare.data.exception.StatusCode
+import com.tustar.ushare.data.entry.execute
+import com.tustar.ushare.data.helper.Message
+import com.tustar.ushare.data.helper.StatusCode
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.ui.HomeActivity
 import com.tustar.ushare.util.CommonDefine
@@ -62,33 +62,25 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
         repo.captcha(mobile!!)
                 .autoDisposable(this)
                 .subscribe({
-                    when (it.code) {
-                        Response.OK -> {
-                            context.toast(R.string.login_captcha_get_success)
-                            showCaptcha(it.data.code)
-                            startCaptchaTimer()
-                        }
-                        Response.FAILURE -> {
-                            when (it.message) {
-                                Message.Unauthorized -> Logger.d("Sign Error")
-                                else -> {
+                    it.execute(
+                            ok = { captcha->
+                                context.toast(R.string.login_captcha_get_success)
+                                showCaptcha(captcha.code)
+                                startCaptchaTimer()
+                            },
+                            failure = { message ->
+                                Message.handleFailure(message) {
+                                    context.toast(R.string.login_captcha_get_err)
                                 }
-                            }
-                            _captchaGetEnable.value = true
-                        }
-                        else -> {
-                            _captchaGetEnable.value = true
-                        }
-                    }
+                                _captchaGetEnable.value = true
+                            },
+                            other = {
+                                _captchaGetEnable.value = true
+                            })
                 }) {
                     _captchaGetEnable.value = true
-                    val code = ExceptionHandler.handleException(it)
-                    when (code) {
-                        StatusCode.SOCKET_TIMEOUT_ERROR -> context.toast(R.string.socket_timeout_error)
-                        StatusCode.CONNECT_ERROR -> context.toast(R.string.connect_error)
-                        StatusCode.UNKNOWN_HOST_ERROR -> context.toast(R.string.unkown_host_error)
-                        StatusCode.SERVER_ERROR -> context.toast(R.string.server_err)
-                        else -> context.toast(R.string.login_captcha_get_err)
+                    StatusCode.handleException(it) {
+                        R.string.login_captcha_get_err
                     }
                 }
     }
@@ -101,38 +93,27 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                 }
                 .autoDisposable(this)
                 .subscribe({
-                    when (it.code) {
-                        Response.OK -> {
-                            var token: String by Preference(context,
-                                    CommonDefine.HEAD_ACCESS_TOKEN, "")
-                            token = it.data.token
-                            var mobile: String by Preference(context,
-                                    CommonDefine.PREF_KEY_USER_MOBILE, "")
-                            mobile = it.data.mobile
-                            var nick: String by Preference(context,
-                                    CommonDefine.PREF_KEY_USER_NICK, "")
-                            nick = it.data.nick
-                            _toMainEvent.value = Event(Unit)
-                        }
-                        Response.FAILURE -> {
-                            when (it.message) {
-                                Message.Unauthorized -> Logger.d("Sign Error")
-                                else -> context.toast(R.string.login_submit_err)
-                            }
-                        }
-                        else -> {
-                            // 更多情况
-                        }
-                    }
+                    it.execute(
+                            ok = { user ->
+                                var token: String by Preference(context,
+                                        CommonDefine.HEAD_ACCESS_TOKEN, "")
+                                token = user.token
+                                var mobile: String by Preference(context,
+                                        CommonDefine.PREF_KEY_USER_MOBILE, "")
+                                mobile = user.mobile
+                                var nick: String by Preference(context,
+                                        CommonDefine.PREF_KEY_USER_NICK, "")
+                                nick = user.nick
+                                _toMainEvent.value = Event(Unit)
+                            },
+                            failure = { message ->
+                                Message.handleFailure(message) {
+                                    context.toast(R.string.login_submit_err)
+                                }
+                            })
                 }) {
-                    //
-                    val code = ExceptionHandler.handleException(it)
-                    when (code) {
-                        StatusCode.SOCKET_TIMEOUT_ERROR -> context.toast(R.string.socket_timeout_error)
-                        StatusCode.CONNECT_ERROR -> context.toast(R.string.connect_error)
-                        StatusCode.UNKNOWN_HOST_ERROR -> context.toast(R.string.unkown_host_error)
-                        StatusCode.SERVER_ERROR -> context.toast(R.string.server_err)
-                        else -> context.toast(R.string.login_submit_err)
+                    StatusCode.handleException(it) {
+                        R.string.login_submit_err
                     }
                 }
     }

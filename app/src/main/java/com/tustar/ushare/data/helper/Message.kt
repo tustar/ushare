@@ -1,4 +1,6 @@
-package com.tustar.ushare.data.entry
+package com.tustar.ushare.data.helper
+
+import com.tustar.ushare.util.Logger
 
 object Message {
 
@@ -23,4 +25,11 @@ object Message {
      * 过期token
      */
     const val EXPIRED_TOKEN = "expired_token"
+
+    fun handleFailure(msg: String, block: (String) -> Unit) {
+        when (msg) {
+            Unauthorized -> Logger.d("Sign Error")
+            else -> block(msg)
+        }
+    }
 }

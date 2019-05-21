@@ -1,4 +1,4 @@
-package com.tustar.ushare.data.exception
+package com.tustar.ushare.exception
 
 class ApiException : RuntimeException {
 
