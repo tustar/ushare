@@ -20,7 +20,7 @@ import com.tustar.ushare.rxbus.EventLot
 import com.tustar.ushare.ui.HomeActivity
 import com.tustar.ushare.ui.lot.LotFragment
 import com.tustar.ushare.ui.mine.MineFragment
-import com.tustar.ushare.ui.mine.MinePresenter
+import com.tustar.ushare.ui.mine.MineViewModel
 import com.tustar.ushare.ui.topic.TopicFragment
 import com.tustar.ushare.ui.topic.TopicPresenter
 import com.tustar.ushare.util.CommonDefine
@@ -99,7 +99,7 @@ class MainActivity : BaseActivity(), MainContract.View {
         //
         val mineFragment = MineFragment.newInstance()
         adapter.addFragment(mineFragment)
-        MinePresenter(mineFragment, Injection.provideUserRepository(applicationContext))
+        MineViewModel(mineFragment, Injection.provideUserRepository(applicationContext))
         viewPager.adapter = adapter
     }
 

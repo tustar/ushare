@@ -7,6 +7,7 @@ import com.tustar.ushare.data.Injection
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.ui.login.LoginViewModel
 import com.tustar.ushare.ui.lot.LotViewModel
+import com.tustar.ushare.ui.mine.MineViewModel
 
 class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.NewInstanceFactory() {
 
@@ -15,8 +16,11 @@ class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.New
                 when {
                     isAssignableFrom(LoginViewModel::class.java) ->
                         LoginViewModel(repo)
-                    isAssignableFrom(LotViewModel::class.java)-> {
+                    isAssignableFrom(LotViewModel::class.java) -> {
                         LotViewModel(repo)
+                    }
+                    isAssignableFrom(MineViewModel::class.java) -> {
+                        MineViewModel(repo)
                     }
                     else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
                 }
@@ -29,11 +33,11 @@ class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.New
         fun getInstance(application: Application) =
                 INSTANCE
                         ?: synchronized(ViewModelFactory::class.java) {
-                    INSTANCE
-                            ?: ViewModelFactory(
-                                    Injection.provideUserRepository(application.applicationContext))
-                            .also { INSTANCE = it }
-                }
+                            INSTANCE
+                                    ?: ViewModelFactory(
+                                            Injection.provideUserRepository(application.applicationContext))
+                                            .also { INSTANCE = it }
+                        }
 
     }
 }

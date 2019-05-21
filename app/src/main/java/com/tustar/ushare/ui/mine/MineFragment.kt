@@ -1,89 +1,87 @@
 package com.tustar.ushare.ui.mine
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.User
+import com.tustar.ushare.ktx.clicks
 import com.tustar.ushare.ui.HomeActivity
-import com.tustar.ushare.util.NoFastClickListener
-import org.jetbrains.anko.find
+import com.uber.autodispose.android.lifecycle.autoDisposable
+import kotlinx.android.synthetic.main.fragment_mine.*
+import org.jetbrains.anko.support.v4.toast
 
 
-class MineFragment : Fragment(), MineContract.View {
+class MineFragment : Fragment() {
 
-    override lateinit var presenter: MineContract.Presenter
-    private lateinit var nickEditText: EditText
-    private lateinit var mobileText: TextView
-    private lateinit var weightText: TextView
-    private lateinit var updateBtn: Button
+    private lateinit var viewModel: MineViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
+        viewModel = MineViewModel.get(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_mine, container, false)
-        initView(view)
-        return view
+        return inflater.inflate(R.layout.fragment_mine, container, false)
     }
 
-    private fun initView(view: View) {
-        with(view) {
-            nickEditText = find(R.id.mine_nick_text)
-            mobileText = find(R.id.mine_mobile_text)
-            weightText = find(R.id.mine_weight_text)
-            updateBtn = find(R.id.mine_submit)
-        }
-        updateBtn.setOnClickListener(object : NoFastClickListener() {
-            override fun onNoFastClick(v: View) {
-                presenter.updateNick(nickEditText.text.toString().trim())
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews()
+
+        initObservers()
+    }
+
+    private fun initViews() {
+        mine_submit.clicks()
+                .autoDisposable(this)
+                .subscribe {
+                    updateNick()
+                }
+    }
+
+    private fun initObservers() {
+        viewModel.user.observe(this, Observer {
+            updateUserUI(it)
+        })
+        viewModel.toLoginUIEvent.observe(this, Observer {
+            it.getContentIfNotHandled()?.let {
+                toLoginUI()
             }
         })
     }
 
-    override fun updateUserUI(user: User) {
-        user?.let {
-            nickEditText.setText(user.nick)
-            mobileText.text = user.mobile
-            weightText.text = user.weight.toString()
+    private fun updateNick() {
+        val nick = mine_nick_text.text.toString()
+        if (nick.isNullOrEmpty()) {
+            toast(R.string.mine_nick_error)
+            return
         }
-    }
 
-    override fun showToast(resId: Int) {
-//        toast(resId)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+        viewModel.updateNick(nick)
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.onLogin()
+        viewModel.onLogin()
     }
 
-    override fun onDetach() {
-        super.onDetach()
-        presenter?.detachView()
-    }
-
-    override fun toLoginUI() {
+    private fun toLoginUI() {
         val intent = Intent(activity, HomeActivity::class.java).apply {
-
         }
         startActivity(intent)
+    }
+
+    private fun updateUserUI(user: User) {
+        mine_nick_text.setText(user.nick)
+        mine_mobile_text.text = user.mobile
+        mine_weight_text.text = user.weight.toString()
     }
 
     companion object {
