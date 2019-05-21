@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.tustar.ushare.data.Injection
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.ui.login.LoginViewModel
+import com.tustar.ushare.ui.lot.LotViewModel
 
 class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.NewInstanceFactory() {
 
@@ -14,6 +15,9 @@ class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.New
                 when {
                     isAssignableFrom(LoginViewModel::class.java) ->
                         LoginViewModel(repo)
+                    isAssignableFrom(LotViewModel::class.java)-> {
+                        LotViewModel(repo)
+                    }
                     else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
                 }
             } as T

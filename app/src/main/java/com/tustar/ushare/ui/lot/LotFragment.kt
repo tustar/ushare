@@ -1,24 +1,27 @@
 package com.tustar.ushare.ui.lot
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tustar.action.RxBus
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
 import com.tustar.ushare.data.entry.User
+import com.tustar.ushare.rxbus.EventLot
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
 import com.tustar.ushare.util.Preference
+import com.uber.autodispose.android.lifecycle.autoDisposable
 import org.jetbrains.anko.find
 
-class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener {
+class LotFragment : Fragment(), LotAdapter.OnItemClickListener {
 
-    override lateinit var presenter: LotContract.Presenter
+    private lateinit var viewModel: LotViewModel
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: LotAdapter
@@ -27,9 +30,7 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
+        viewModel = LotViewModel.get(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +39,15 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
         val view = inflater.inflate(R.layout.fragment_lot, container,
                 false)
         initRecycleView(view)
-        presenter.getUsers()
+        viewModel.getUsers()
 
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initObservers()
     }
 
     override fun onResume() {
@@ -48,7 +55,7 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
         var token: String by Preference(UShareApplication.context,
                 CommonDefine.HEAD_ACCESS_TOKEN, "")
         if (oldToken != token) {
-            presenter.getUsers()
+            viewModel.getUsers()
             oldToken = token
         }
     }
@@ -65,11 +72,20 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
         // TODO
     }
 
-    override fun showToast(resId: Int) {
-//        toast(resId)
+    private fun initObservers() {
+
+        viewModel.users.observe(this, Observer {
+            updateUsers(it)
+        })
+
+        RxBus.get().toObservable(EventLot::class.java)
+                .autoDisposable(this)
+                .subscribe {
+                    viewModel.getUsers()
+                }
     }
 
-    override fun updateUsers(users: MutableList<User>) {
+    private fun updateUsers(users: MutableList<User>) {
         Logger.d("topics = $users")
         this.users.clear()
         this.users.addAll(users)
@@ -77,23 +93,9 @@ class LotFragment : Fragment(), LotContract.View, LotAdapter.OnItemClickListener
         adapter.notifyDataSetChanged()
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        presenter?.detachView()
-    }
-
     companion object {
 
         @JvmStatic
-        fun newInstance() =
-                LotFragment().apply {
-                    arguments = Bundle().apply {
-
-                    }
-                }
+        fun newInstance() = LotFragment()
     }
 }

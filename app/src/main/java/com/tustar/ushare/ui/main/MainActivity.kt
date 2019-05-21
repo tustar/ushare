@@ -11,13 +11,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.viewpager.widget.ViewPager
 import com.airbnb.lottie.LottieAnimationView
+import com.tustar.action.RxBus
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
 import com.tustar.ushare.base.BaseActivity
 import com.tustar.ushare.data.Injection
+import com.tustar.ushare.rxbus.EventLot
 import com.tustar.ushare.ui.HomeActivity
 import com.tustar.ushare.ui.lot.LotFragment
-import com.tustar.ushare.ui.lot.LotPresenter
 import com.tustar.ushare.ui.mine.MineFragment
 import com.tustar.ushare.ui.mine.MinePresenter
 import com.tustar.ushare.ui.topic.TopicFragment
@@ -91,7 +92,6 @@ class MainActivity : BaseActivity(), MainContract.View {
         //
         lotFragment = LotFragment.newInstance()
         adapter.addFragment(lotFragment)
-        LotPresenter(lotFragment, Injection.provideUserRepository(applicationContext))
         //
         val topicFragment = TopicFragment.newInstance()
         adapter.addFragment(topicFragment)
@@ -162,12 +162,12 @@ class MainActivity : BaseActivity(), MainContract.View {
         startActivity(intent)
     }
 
-    override fun updateLotUI() {
-        lotFragment.presenter.getUsers()
-    }
-
     override fun showToast(resId: Int) {
         toast(resId)
+    }
+
+    override fun updateLotUI() {
+       RxBus.get().post(EventLot())
     }
 
     private fun showShakeUI() {

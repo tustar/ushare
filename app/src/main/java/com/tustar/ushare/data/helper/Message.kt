@@ -26,10 +26,10 @@ object Message {
      */
     const val EXPIRED_TOKEN = "expired_token"
 
-    fun handleFailure(msg: String, block: (String) -> Unit) {
+    fun handleFailure(msg: String, block: ((String) -> Unit)? = null) {
         when (msg) {
             Unauthorized -> Logger.d("Sign Error")
-            else -> block(msg)
+            else -> block?.invoke(msg)
         }
     }
 }

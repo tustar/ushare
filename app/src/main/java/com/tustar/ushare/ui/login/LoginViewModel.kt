@@ -23,7 +23,6 @@ import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication.Companion.context
 import com.tustar.ushare.ViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
-import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.entry.execute
 import com.tustar.ushare.data.helper.Message
 import com.tustar.ushare.data.helper.StatusCode
