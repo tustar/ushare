@@ -99,14 +99,14 @@
             tools:text="888888"/>
 
         <TextView
-            android:id="@+id/login_captcha_btn"
+            android:id="@+id/login_captcha_get"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|right"
             android:layout_marginRight="0dp"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:text=""
+            android:text="@string/login_captcha_get"
             android:textColor="@color/selector_code_btn_text_color"
             android:textSize="@dimen/login_label_text_size" />
     </LinearLayout>

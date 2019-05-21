@@ -6,11 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import com.jakewharton.rxbinding2.widget.RxTextView
+import androidx.lifecycle.Observer
+import com.tustar.action.RxBus
 import com.tustar.ushare.R
+import com.tustar.ushare.UShareApplication
+import com.tustar.ushare.ktx.clicks
+import com.tustar.ushare.ktx.textChanges
+import com.tustar.ushare.rxbus.EventCode
+import com.tustar.ushare.util.CodeUtils
+import com.tustar.ushare.util.MobileUtils
 import com.uber.autodispose.android.lifecycle.autoDisposable
 import kotlinx.android.synthetic.main.fragment_login.*
+import org.jetbrains.anko.toast
 
 
 class LoginFragment : Fragment() {
@@ -30,27 +37,90 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initViews()
+
+        initObservers()
     }
 
     private fun initViews() {
+        login_mobile_editText.textChanges()
+                .map(CharSequence::toString)
+                .autoDisposable(this)
+                .subscribe {
+                    val visible = if (it.isNullOrEmpty()) {
+                        View.INVISIBLE
+                    } else {
+                        View.VISIBLE
+                    }
+                    login_mobile_clear.visibility = visible
+                }
 
-         RxTextView.textChangeEvents(login_captcha_editText)
-                 .autoDisposable(this)
-                 .subscribe {
-                     val visible = if (it.view().toString().isNullOrEmpty()) {
-                         View.INVISIBLE
-                     } else {
-                         View.VISIBLE
-                     }
-                     login_mobile_clear.visibility = visible
-         }
+        login_mobile_clear.clicks()
+                .autoDisposable(this)
+                .subscribe {
+                    login_mobile_editText.setText("")
+                }
+
+        login_captcha_get.clicks()
+                .autoDisposable(this)
+                .subscribe {
+                    getCaptcha()
+                }
 
 
-        login_submit.setOnClickListener {
-            Navigation.createNavigateOnClickListener(R.id.activity_main)
+        login_submit.clicks()
+                .autoDisposable(this)
+                .subscribe {
+                    login()
+                }
+
+        RxBus.get().toObservable(EventCode::class.java).autoDisposable(this)
+                .subscribe {
+                    login_captcha_editText.setText(it.code)
+                }
+    }
+
+    private fun initObservers() {
+        viewModel.captchaGetEnable.observe(this, Observer {
+            login_captcha_get.isEnabled = it
+        })
+        viewModel.captchaGetText.observe(this, Observer {
+            login_captcha_get.text = it
+        })
+        viewModel.submitEnable.observe(this, Observer {
+            login_submit.isEnabled = it
+        })
+        viewModel.toMainEvent.observe(this, Observer {
+            it.getContentIfNotHandled()?.let {
+                activity?.finish()
+            }
+        })
+    }
+
+    private fun getCaptcha() {
+        val mobile = login_mobile_editText.text.toString()
+        if (!MobileUtils.isMobileOk(mobile)) {
+            UShareApplication.context.toast(R.string.login_mobile_err)
+            return
         }
+
+        viewModel.getCaptcha(mobile)
+    }
+
+    private fun login() {
+        val mobile = login_mobile_editText.text.toString()
+        if (!MobileUtils.isMobileOk(mobile)) {
+            UShareApplication.context.toast(R.string.login_mobile_err)
+            return
+        }
+
+        val captcha = login_captcha_editText.text.toString()
+        if (!CodeUtils.isCodeOk(captcha)) {
+            UShareApplication.context.toast(R.string.login_captcha_err)
+            return
+        }
+
+        viewModel.login(mobile, captcha)
     }
 
     companion object {

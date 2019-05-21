@@ -3,19 +3,23 @@ package com.tustar.ushare.ui.login
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_CANCEL_CURRENT
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.view.View
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.databinding.ObservableBoolean
-import androidx.databinding.ObservableField
-import androidx.databinding.ObservableInt
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import com.tustar.ushare.Event
 import com.tustar.ushare.R
-import com.tustar.ushare.SingleLiveEvent
 import com.tustar.ushare.UShareApplication.Companion.context
 import com.tustar.ushare.ViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
@@ -24,61 +28,39 @@ import com.tustar.ushare.data.entry.Response
 import com.tustar.ushare.data.exception.ExceptionHandler
 import com.tustar.ushare.data.exception.StatusCode
 import com.tustar.ushare.data.repository.UserRepository
-import com.tustar.ushare.util.*
+import com.tustar.ushare.ui.HomeActivity
+import com.tustar.ushare.util.CommonDefine
+import com.tustar.ushare.util.Logger
+import com.tustar.ushare.util.Preference
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.subscribers.DisposableSubscriber
 import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit
 
 class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
 
-    val mobile = ObservableField<String>()
-    val mobileClear = ObservableInt(View.INVISIBLE)
-    val captcha = ObservableField<String>()
-    val captchaGetEnable = ObservableBoolean(true)
-    val captchaGetText = ObservableField<String>()
-    val submitEnable = ObservableBoolean(true)
-    val toMainCommand = SingleLiveEvent<Void>()
-    var onClickSendListener = object : NoFastClickListener() {
-        override fun onNoFastClick(v: View) {
-            send(mobile.get())
-        }
-    }
-    var onClickLoginListener = object : NoFastClickListener() {
-        override fun onNoFastClick(v: View) {
-            login(mobile.get(), captcha.get())
-        }
-    }
+    private val _captchaGetEnable = MutableLiveData<Boolean>()
+    val captchaGetEnable: LiveData<Boolean>
+        get() = _captchaGetEnable
 
-    fun clearMobileText(v: View) {
-        mobile.set("")
-    }
+    private val _captchaGetText = MutableLiveData<String>()
+    val captchaGetText: LiveData<String>
+        get() = _captchaGetText
 
-    fun onMobileTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-        val visible = if (s == null || s.isEmpty()) {
-            View.INVISIBLE
-        } else {
-            View.VISIBLE
-        }
-        mobileClear.set(visible)
-    }
+    private val _submitEnable = MutableLiveData<Boolean>()
+    val submitEnable: LiveData<Boolean>
+        get() = _submitEnable
 
-    private fun send(mobile: String?) {
-        if (!MobileUtils.isMobileOk(mobile)) {
-            context.toast(R.string.login_mobile_err)
-            return
-        }
+    private val _toMainEvent = MutableLiveData<Event<Unit>>()
+    val toMainEvent: LiveData<Event<Unit>>
+        get() = _toMainEvent
 
-      repo.captcha(mobile!!)
-                .doOnSubscribe {
-                    captchaGetEnable.set(false)
-                }
-                .doOnComplete {
-                    captchaGetEnable.set(true)
-                }
-              .autoDisposable(this)
+
+    fun getCaptcha(mobile: String?) {
+        _captchaGetEnable.value = false
+        repo.captcha(mobile!!)
+                .autoDisposable(this)
                 .subscribe({
                     when (it.code) {
                         Response.OK -> {
@@ -92,12 +74,14 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                                 else -> {
                                 }
                             }
+                            _captchaGetEnable.value = true
                         }
                         else -> {
-
+                            _captchaGetEnable.value = true
                         }
                     }
                 }) {
+                    _captchaGetEnable.value = true
                     val code = ExceptionHandler.handleException(it)
                     when (code) {
                         StatusCode.SOCKET_TIMEOUT_ERROR -> context.toast(R.string.socket_timeout_error)
@@ -109,24 +93,11 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                 }
     }
 
-    fun login(mobile: String?, captcha: String?) {
-        Logger.d("mobile = $mobile, captcha = $captcha")
-        if (!MobileUtils.isMobileOk(mobile)) {
-            context.toast(R.string.login_mobile_err)
-            return
-        }
-
-        if (!CodeUtils.isCodeOk(captcha)) {
-            context.toast(R.string.login_captcha_err)
-            return
-        }
-
+    fun login(mobile: String, captcha: String) {
+        _submitEnable.value = false
         repo.login(mobile!!, captcha!!)
-                .doOnSubscribe {
-                    submitEnable.set(false)
-                }
-                .doOnComplete {
-                    submitEnable.set(true)
+                .doOnTerminate {
+                    _submitEnable.value = true
                 }
                 .autoDisposable(this)
                 .subscribe({
@@ -141,7 +112,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                             var nick: String by Preference(context,
                                     CommonDefine.PREF_KEY_USER_NICK, "")
                             nick = it.data.nick
-                            toMainCommand.call()
+                            _toMainEvent.value = Event(Unit)
                         }
                         Response.FAILURE -> {
                             when (it.message) {
@@ -170,7 +141,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
     private fun startCaptchaTimer() {
         Logger.d()
         val count = CommonDefine.CODE_TIMER
-         Flowable.interval(0, 1, TimeUnit.SECONDS)
+        Flowable.interval(0, 1, TimeUnit.SECONDS)
                 .onBackpressureBuffer()
                 .take(count)
                 .map {
@@ -178,39 +149,35 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    captchaGetEnable.set(false)
+                    _captchaGetEnable.value = false
                 }
                 .doOnTerminate {
-                    captchaGetEnable.set(true)
+                    _captchaGetEnable.value = true
                 }
-                 .autoDisposable(this)
-                .subscribeWith(object : DisposableSubscriber<Long>() {
-
-                    override fun onNext(timer: Long?) {
-                        val text = context.getString(R.string.login_captcha_timer, timer)
-                        captchaGetText.set(text)
-                    }
-
-                    override fun onComplete() {
-                        Logger.d()
-                        val text = context.getString(R.string.login_captcha_get)
-                        captchaGetText.set(text)
-                    }
-
-                    override fun onError(t: Throwable?) {
-                        Logger.d()
-                        t?.printStackTrace()
-                    }
-                })
+                .autoDisposable(this)
+                .subscribe(
+                        { timer ->
+                            _captchaGetText.value = context.getString(R.string.login_captcha_timer,
+                                    timer)
+                        },
+                        {
+                            Logger.d()
+                            it.printStackTrace()
+                        },
+                        {
+                            _captchaGetText.value = context.getString(R.string.login_captcha_get)
+                        })
 
     }
 
     private fun showCaptcha(code: String) {
-        captcha.set(code)
-//        val intent = Intent(this, HomeActivity::class.java).apply {
-//            putExtra(CommonDefine.EXTRA_VCODE, captcha)
-//        }
-//        val pendingIntent = PendingIntent.getActivity(this, 1, intent, 0)
+        saveCodeToClipboard(code)
+        val intent = Intent(context, HomeActivity::class.java).apply {
+            putExtra(CommonDefine.EXTRA_VCODE, code)
+            addFlags(FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        val pendingIntent = PendingIntent.getActivity(context, 1, intent,
+                FLAG_CANCEL_CURRENT)
         val channelName = context.getString(R.string.login_channel_name)
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channel = NotificationChannel(CommonDefine.CHANNEL_ID, channelName,
@@ -233,7 +200,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
             setDefaults(NotificationCompat.DEFAULT_SOUND)
             setSmallIcon(R.mipmap.ic_launcher)
             setLargeIcon(BitmapFactory.decodeResource(context.resources, R.mipmap.ic_launcher))
-//            setContentIntent(pendingIntent)
+            setContentIntent(pendingIntent)
             NotificationCompat.PRIORITY_DEFAULT
 //            setFullScreenIntent(pendingIntent, true)
             setAutoCancel(true)
@@ -243,6 +210,11 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
         val notification = builder.build()
         val nm = NotificationManagerCompat.from(context)
         nm.notify((System.currentTimeMillis() / 1000L).toInt(), notification)
+    }
+
+    private fun saveCodeToClipboard(code: String) {
+        val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        cm.primaryClip = ClipData.newPlainText(CommonDefine.EXTRA_VCODE, code)
     }
 
     companion object {

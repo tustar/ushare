@@ -5,9 +5,10 @@ import com.tustar.ushare.data.entry.Topic
 import com.tustar.ushare.data.remote.RetrofitManager
 import com.tustar.ushare.util.scheduler.SchedulerUtils
 import io.reactivex.Observable
+import io.reactivex.Single
 
 class TopicRepository {
-    fun topicList(page: Int, pageSize: Int): Observable<Response<MutableList<Topic>, Any>> {
+    fun topicList(page: Int, pageSize: Int): Single<Response<MutableList<Topic>, Any>> {
         var params = mutableMapOf<String, Any>()
         params["page"] = page
         params["page_size"] = pageSize

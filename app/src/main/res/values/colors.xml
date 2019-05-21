@@ -33,9 +33,9 @@
     <color name="tab_bar_bg_color">#fcfcfc</color>
 
     <!--Login-->
-    <color name="login_code_btn_n">#ff33b5e5</color>
-    <color name="login_code_btn_p">#ff0099cc</color>
-    <color name="login_code_btn_d">#ff0099cc</color>
+    <color name="login_code_btn_n">#33b5e5</color>
+    <color name="login_code_btn_p">#CDE3F0</color>
+    <color name="login_code_btn_d">#CDE3F0</color>
 
 
 </resources>
