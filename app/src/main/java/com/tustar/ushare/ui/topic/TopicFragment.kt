@@ -1,82 +1,48 @@
 package com.tustar.ushare.ui.topic
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.Topic
-import com.tustar.ushare.util.Logger
-import org.jetbrains.anko.find
-import org.jetbrains.anko.support.v4.toast
+import kotlinx.android.synthetic.main.fragment_topic.*
 
 
-class TopicFragment : Fragment(), TopicContract.View, TopicAdapter.OnItemClickListener {
+class TopicFragment : Fragment(), TopicAdapter.OnItemClickListener {
 
-    override lateinit var presenter: TopicContract.Presenter
-    private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
-    private lateinit var adapter: TopicAdapter
+    private lateinit var topicAdapter: TopicAdapter
     private var topics = arrayListOf<Topic>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_topic, container, false)
-
-        initRecycleView(view)
-        presenter.getTopics()
-
-        return view
+        return inflater.inflate(R.layout.fragment_topic, container, false)
     }
 
-    private fun initRecycleView(view: View) {
-        recyclerView = view.find(R.id.topic_recycle_view)
-        recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-        adapter = TopicAdapter(topics)
-        adapter.setOnItemClickListener(this)
-        recyclerView.adapter = adapter
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initViews()
+    }
+
+    private fun initViews() {
+        topicAdapter = TopicAdapter(topics)
+        topicAdapter.setOnItemClickListener(this)
+        topic_recycle_view.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = adapter
+        }
     }
 
     override fun onItemClick(view: View, position: Int) {
         // TODO
     }
 
-    override fun showToast(resId: Int) {
-        toast(resId)
-    }
-
-    override fun updateTopics(topics: MutableList<Topic>) {
-        Logger.d("topics = $topics")
-        this.topics.clear()
-        this.topics.addAll(topics)
-        adapter.topics = topics
-        adapter.notifyDataSetChanged()
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        presenter?.detachView()
-    }
-
-
     companion object {
         @JvmStatic
-        fun newInstance() =
-                TopicFragment().apply {
-                    arguments = Bundle().apply {
-                    }
-                }
+        fun newInstance() = TopicFragment()
     }
 }

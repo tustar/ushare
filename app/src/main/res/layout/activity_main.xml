@@ -14,16 +14,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
+        android:id="@+id/main_view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/tab_layout"
+        app:layout_constraintBottom_toTopOf="@id/main_tab_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/action_bar" />
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+        android:id="@+id/main_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_bar_height"
         android:background="@drawable/tab_bar_bg"
@@ -37,7 +37,7 @@
         app:tabTextColor="@android:color/darker_gray" />
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/lottie_view"
+        android:id="@+id/main_lottie_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
@@ -48,6 +48,4 @@
         app:lottie_autoPlay="false"
         app:lottie_fileName="ping_pong.json"
         app:lottie_loop="false" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

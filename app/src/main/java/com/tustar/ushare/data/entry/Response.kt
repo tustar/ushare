@@ -1,5 +1,8 @@
 package com.tustar.ushare.data.entry
 
+import com.tustar.ushare.util.Logger
+
+
 data class Response<out D, out E>(
         val data: D,
         val message: String,
@@ -15,11 +18,12 @@ data class Response<out D, out E>(
 fun <D, E> Response<out D, out E>.execute(ok: (D) -> Unit,
                                           failure: (String) -> Unit,
                                           other: ((D) -> Unit)? = null) {
-    when (code) {
+    val unit = when (code) {
         Response.OK -> {
             ok(data)
         }
         Response.FAILURE -> {
+            Logger.e("$code $message")
             failure(message)
         }
         else -> {

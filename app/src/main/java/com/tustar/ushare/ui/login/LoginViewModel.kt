@@ -18,16 +18,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
-import com.tustar.ushare.Event
+import com.tustar.ushare.LiveEvent
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication.Companion.context
-import com.tustar.ushare.ViewModelFactory
+import com.tustar.ushare.vmf.UserViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
 import com.tustar.ushare.data.entry.execute
 import com.tustar.ushare.data.helper.Message
 import com.tustar.ushare.data.helper.StatusCode
 import com.tustar.ushare.data.repository.UserRepository
-import com.tustar.ushare.ui.HomeActivity
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
 import com.tustar.ushare.util.Preference
@@ -51,8 +50,8 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
     val submitEnable: LiveData<Boolean>
         get() = _submitEnable
 
-    private val _toMainEvent = MutableLiveData<Event<Unit>>()
-    val toMainEvent: LiveData<Event<Unit>>
+    private val _toMainEvent = MutableLiveData<LiveEvent<Unit>>()
+    val toMainEvent: LiveData<LiveEvent<Unit>>
         get() = _toMainEvent
 
 
@@ -103,7 +102,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                                 var nick: String by Preference(context,
                                         CommonDefine.PREF_KEY_USER_NICK, "")
                                 nick = user.nick
-                                _toMainEvent.value = Event(Unit)
+                                _toMainEvent.value = LiveEvent(Unit)
                             },
                             failure = { message ->
                                 Message.handleFailure(message) {
@@ -152,7 +151,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
 
     private fun showCaptcha(code: String) {
         saveCodeToClipboard(code)
-        val intent = Intent(context, HomeActivity::class.java).apply {
+        val intent = Intent(context, LoginActivity::class.java).apply {
             putExtra(CommonDefine.EXTRA_VCODE, code)
             addFlags(FLAG_ACTIVITY_SINGLE_TOP)
         }
@@ -201,7 +200,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
 
         fun get(fragment: Fragment): LoginViewModel {
             val application = checkApplication(checkActivity(fragment))
-            return ViewModelProviders.of(fragment, ViewModelFactory.getInstance(application))
+            return ViewModelProviders.of(fragment, UserViewModelFactory.getInstance(application))
                     .get(LoginViewModel::class.java)
         }
     }

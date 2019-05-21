@@ -1,26 +1,24 @@
-package com.tustar.ushare
+package com.tustar.ushare.vmf
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.tustar.ushare.data.Injection
+import com.tustar.ushare.data.entry.Topic
+import com.tustar.ushare.data.repository.TopicRepository
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.ui.login.LoginViewModel
 import com.tustar.ushare.ui.lot.LotViewModel
 import com.tustar.ushare.ui.mine.MineViewModel
+import com.tustar.ushare.ui.topic.TopicViewModel
 
-class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.NewInstanceFactory() {
+class TopicViewModelFactory(private val repo: TopicRepository) : ViewModelProvider.NewInstanceFactory() {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T =
             with(modelClass) {
                 when {
-                    isAssignableFrom(LoginViewModel::class.java) ->
-                        LoginViewModel(repo)
-                    isAssignableFrom(LotViewModel::class.java) -> {
-                        LotViewModel(repo)
-                    }
-                    isAssignableFrom(MineViewModel::class.java) -> {
-                        MineViewModel(repo)
+                    isAssignableFrom(TopicViewModel::class.java) -> {
+                        TopicViewModel(repo)
                     }
                     else -> throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
                 }
@@ -28,14 +26,14 @@ class ViewModelFactory(private val repo: UserRepository) : ViewModelProvider.New
 
     companion object {
         @Volatile
-        private var INSTANCE: ViewModelFactory? = null
+        private var INSTANCE: TopicViewModelFactory? = null
 
         fun getInstance(application: Application) =
                 INSTANCE
-                        ?: synchronized(ViewModelFactory::class.java) {
+                        ?: synchronized(TopicViewModelFactory::class.java) {
                             INSTANCE
-                                    ?: ViewModelFactory(
-                                            Injection.provideUserRepository(application.applicationContext))
+                                    ?: TopicViewModelFactory(
+                                            Injection.provideTopicRepository())
                                             .also { INSTANCE = it }
                         }
 

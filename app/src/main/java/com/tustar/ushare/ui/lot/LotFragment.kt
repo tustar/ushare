@@ -86,7 +86,7 @@ class LotFragment : Fragment(), LotAdapter.OnItemClickListener {
     }
 
     private fun updateUsers(users: MutableList<User>) {
-        Logger.d("topics = $users")
+        Logger.d("users = $users")
         this.users.clear()
         this.users.addAll(users)
         adapter.users = users

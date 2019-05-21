@@ -44,7 +44,7 @@
     <string name="lot_nick">昵称：</string>
     <string name="lot_mobile">手机号：</string>
     <string name="lot_weight">抽签权重：</string>
-    <string name="lot_weight_err">更新权重失败</string>
+    <string name="lot_weight_failure">更新权重失败</string>
     <string name="lot_weight_success">更新权重成功</string>
 
     <!--Topic-->

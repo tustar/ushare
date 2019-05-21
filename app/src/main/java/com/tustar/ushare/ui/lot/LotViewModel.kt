@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import com.tustar.ushare.R
-import com.tustar.ushare.ViewModelFactory
+import com.tustar.ushare.vmf.UserViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
 import com.tustar.ushare.data.entry.User
 import com.tustar.ushare.data.entry.execute
@@ -45,7 +45,7 @@ class LotViewModel(private val repo: UserRepository) : BaseViewModel() {
 
         fun get(fragment: Fragment): LotViewModel {
             val application = checkApplication(checkActivity(fragment))
-            return ViewModelProviders.of(fragment, ViewModelFactory.getInstance(application))
+            return ViewModelProviders.of(fragment, UserViewModelFactory.getInstance(application))
                     .get(LotViewModel::class.java)
         }
     }

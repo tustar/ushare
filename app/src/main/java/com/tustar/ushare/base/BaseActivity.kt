@@ -63,56 +63,6 @@ open class BaseActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    fun setFullStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val decorView = window.decorView
-            val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            decorView.systemUiVisibility = option
-            window.statusBarColor = Color.TRANSPARENT
-        }
-    }
-
-
-    fun setDarkStatusIcon(isDark: Boolean) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            val decorView = window.decorView
-            if (decorView != null) {
-                var visibility = decorView.systemUiVisibility
-                visibility
-                decorView.systemUiVisibility = if (isDark) {
-                    //设置黑色状态栏图标
-                    visibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                } else {
-                    //设置白色状态栏图标
-                    visibility and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                }
-            }
-        } else {
-            try {
-                val setDarkStatusIcon = Window::class.java.getDeclaredMethod("setDarkStatusIcon",
-                        Boolean::class.javaPrimitiveType)
-                setDarkStatusIcon.invoke(window, isDark)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-        }
-    }
-
-    fun setStatusBarColor(colorId: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = resources.getColor(colorId)
-        }
-    }
-
-    fun setStatusBarColor(color: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.statusBarColor = Color.parseColor(color)
-        }
-    }
-
-    open fun initViews() {}
-
     fun forcedExitOnBackPressed() {
         Logger.d()
         if (System.currentTimeMillis() - firstPressedTime < ON_BACK_EXIT_DURATION) {

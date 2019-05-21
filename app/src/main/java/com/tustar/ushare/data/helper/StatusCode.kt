@@ -3,7 +3,6 @@ package com.tustar.ushare.data.helper
 import com.google.gson.JsonParseException
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
-import com.tustar.ushare.exception.ApiException
 import org.jetbrains.anko.toast
 import org.json.JSONException
 import retrofit2.HttpException
@@ -12,12 +11,13 @@ import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 import java.text.ParseException
 
+
 object StatusCode {
 
     /**
      * -1 未知异常
      */
-    const val UNKNOWN_ERROR = -1
+    private const val UNKNOWN_ERROR = -1
 
     /**
      * 200 响应成功
@@ -47,7 +47,7 @@ object StatusCode {
     /**
      * 500 服务器内部错误
      */
-    const val SERVER_ERROR = 500
+    private const val SERVER_ERROR = 500
 
     /**
      * 1001 网络连接超时
@@ -57,69 +57,57 @@ object StatusCode {
     /**
      * 1002 解析出错
      */
-    const val PARSE_ERROR = 1002
-
-    /**
-     * 1003 API出错
-     */
-    const val API_ERROR = 1003
+    private const val PARSE_ERROR = 1002
 
     /**
      * 1004 socket连接超时
      */
-    const val SOCKET_TIMEOUT_ERROR = 1004
+    private const val SOCKET_TIMEOUT_ERROR = 1004
 
     /**
      * 1005 socket连接不上
      */
-    const val CONNECT_ERROR = 1005
+    private const val CONNECT_ERROR = 1005
 
     /**
      * 1006 未知主机
      */
-    const val UNKNOWN_HOST_ERROR = 1006
+    private const val UNKNOWN_HOST_ERROR = 1006
 
 
     private fun exceptionToStatusCode(e: Throwable): Int {
-        var code = UNKNOWN_ERROR
-        when (e) {
-            is HttpException -> {
-                code = e.code()
-            }
+        return when (e) {
+            is HttpException -> e.code()
             // 网络
             is SocketTimeoutException ->
-                code = SOCKET_TIMEOUT_ERROR
+                SOCKET_TIMEOUT_ERROR
 
             is ConnectException ->
-                code = CONNECT_ERROR
+                CONNECT_ERROR
 
             is UnknownHostException ->
-                code = UNKNOWN_HOST_ERROR
+                UNKNOWN_HOST_ERROR
 
             // 解析
-            is JsonParseException, is JSONException, is ParseException
-            -> code = PARSE_ERROR
+            is JsonParseException, is JSONException, is ParseException ->
+                PARSE_ERROR
 
-            // 服务器
-            is ApiException ->
-                code = API_ERROR
-
-            is IllegalArgumentException -> code = SERVER_ERROR
             // 未知错误
-            else -> code = UNKNOWN_ERROR
+            else -> UNKNOWN_ERROR
         }
-        return code
     }
 
-    fun handleException(e: Throwable, block: (Int) -> Int) {
+    fun handleException(e: Throwable, block: ((Int) -> Int)? = null) {
         val code = exceptionToStatusCode(e)
         val resId = when (code) {
             SOCKET_TIMEOUT_ERROR -> R.string.socket_timeout_error
             CONNECT_ERROR -> R.string.connect_error
             UNKNOWN_HOST_ERROR -> R.string.unkown_host_error
-            SERVER_ERROR -> R.string.server_err
-            else -> block(code)
+            SERVER_ERROR, in (500..599) -> R.string.server_err
+            else -> block?.invoke(code)
         }
-        UShareApplication.context.toast(resId)
+        resId?.let {
+            UShareApplication.context.toast(it)
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.tustar.ushare
 
-open class Event<out T>(private val content: T) {
+open class LiveEvent<out T>(private val content: T) {
 
     var hasBeenHandled = false
         private set // Allow external read but not write

@@ -1,4 +1,4 @@
-package com.tustar.ushare.ui
+package com.tustar.ushare.ui.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,16 +6,18 @@ import androidx.navigation.findNavController
 import com.tustar.action.RxBus
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
+import com.tustar.ushare.ktx.setDarkStatusIcon
+import com.tustar.ushare.ktx.setStatusBarColor
 import com.tustar.ushare.rxbus.EventCode
 import com.tustar.ushare.util.CommonDefine
 
 
-class HomeActivity : BaseActivity() {
+class LoginActivity : BaseActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_login)
 
         setDarkStatusIcon(false)
         setStatusBarColor(R.color.action_bar_bg_color)

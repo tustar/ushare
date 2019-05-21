@@ -1,6 +1,5 @@
 package com.tustar.ushare.ui.mine
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +9,7 @@ import androidx.lifecycle.Observer
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.User
 import com.tustar.ushare.ktx.clicks
-import com.tustar.ushare.ui.HomeActivity
+import com.tustar.ushare.ktx.toLoginUI
 import com.uber.autodispose.android.lifecycle.autoDisposable
 import kotlinx.android.synthetic.main.fragment_mine.*
 import org.jetbrains.anko.support.v4.toast
@@ -50,11 +49,6 @@ class MineFragment : Fragment() {
         viewModel.user.observe(this, Observer {
             updateUserUI(it)
         })
-        viewModel.toLoginUIEvent.observe(this, Observer {
-            it.getContentIfNotHandled()?.let {
-                toLoginUI()
-            }
-        })
     }
 
     private fun updateNick() {
@@ -69,13 +63,15 @@ class MineFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.onLogin()
-    }
 
-    private fun toLoginUI() {
-        val intent = Intent(activity, HomeActivity::class.java).apply {
-        }
-        startActivity(intent)
+        User.isTokenActive(
+                active = {
+                    viewModel.getUserInfo()
+                },
+                inactive = {
+                    toLoginUI()
+                }
+        )
     }
 
     private fun updateUserUI(user: User) {
