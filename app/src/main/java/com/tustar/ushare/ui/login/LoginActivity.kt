@@ -6,8 +6,8 @@ import androidx.navigation.findNavController
 import com.tustar.action.RxBus
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
-import com.tustar.ushare.ktx.setDarkStatusIcon
-import com.tustar.ushare.ktx.setStatusBarColor
+import com.tustar.ushare.extension.setDarkStatusIcon
+import com.tustar.ushare.extension.setStatusBarColor
 import com.tustar.ushare.rxbus.EventCode
 import com.tustar.ushare.util.CommonDefine
 

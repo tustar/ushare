@@ -10,8 +10,8 @@ import androidx.lifecycle.Observer
 import com.tustar.action.RxBus
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication
-import com.tustar.ushare.ktx.clicks
-import com.tustar.ushare.ktx.textChanges
+import com.tustar.ushare.extension.clicks
+import com.tustar.ushare.extension.textChanges
 import com.tustar.ushare.rxbus.EventCode
 import com.tustar.ushare.util.CodeUtils
 import com.tustar.ushare.util.MobileUtils

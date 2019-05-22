@@ -1,16 +1,12 @@
 package com.tustar.ushare.base
 
-import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
-import android.view.View
-import android.view.Window
 import android.widget.ImageButton
 import android.widget.TextView
 import com.tustar.ushare.R
-import com.tustar.ushare.ktx.setupActionBar
+import com.tustar.ushare.extension.setupActionBar
 import com.tustar.ushare.util.ActivityCollector
 import com.tustar.ushare.util.Logger
 import org.jetbrains.anko.find

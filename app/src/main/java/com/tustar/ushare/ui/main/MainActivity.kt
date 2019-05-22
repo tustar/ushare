@@ -12,9 +12,9 @@ import com.tustar.action.RxBus
 import com.tustar.ushare.R
 import com.tustar.ushare.base.BaseActivity
 import com.tustar.ushare.data.entry.User
-import com.tustar.ushare.ktx.setDarkStatusIcon
-import com.tustar.ushare.ktx.setStatusBarColor
-import com.tustar.ushare.ktx.toLoginUI
+import com.tustar.ushare.extension.setDarkStatusIcon
+import com.tustar.ushare.extension.setStatusBarColor
+import com.tustar.ushare.extension.toLoginUI
 import com.tustar.ushare.rxbus.EventLot
 import com.tustar.ushare.ui.lot.LotFragment
 import com.tustar.ushare.ui.mine.MineFragment

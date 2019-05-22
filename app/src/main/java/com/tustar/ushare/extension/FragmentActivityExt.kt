@@ -1,41 +1,17 @@
-package com.tustar.ushare.ktx
+package com.tustar.ushare.extension
 
 import android.content.Intent
 import android.os.Build
 import android.view.View
 import android.view.Window
-import android.widget.TextView
-import androidx.annotation.IdRes
-import androidx.appcompat.app.ActionBar
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import com.tustar.ushare.ui.login.LoginActivity
-import java.util.concurrent.TimeUnit
-
-
-fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit) {
-    setSupportActionBar(findViewById(toolbarId))
-    supportActionBar?.run(action)
-}
-
-fun View.clicks() =
-        RxView.clicks(this).throttleFirst(500L, TimeUnit.MILLISECONDS)!!
-
-fun TextView.textChanges() =
-        RxTextView.textChanges(this).throttleFirst(500L, TimeUnit.MILLISECONDS)!!
 
 fun FragmentActivity.toLoginUI() {
     val intent = Intent(this, LoginActivity::class.java).apply {
     }
     startActivity(intent)
-}
-
-fun Fragment.toLoginUI() {
-    activity?.toLoginUI()
 }
 
 fun FragmentActivity.setDarkStatusIcon(isDark: Boolean) {

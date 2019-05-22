@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.tustar.ushare.R
 import com.tustar.ushare.data.entry.User
-import com.tustar.ushare.ktx.clicks
-import com.tustar.ushare.ktx.toLoginUI
+import com.tustar.ushare.extension.clicks
+import com.tustar.ushare.extension.toLoginUI
 import com.uber.autodispose.android.lifecycle.autoDisposable
 import kotlinx.android.synthetic.main.fragment_mine.*
 import org.jetbrains.anko.support.v4.toast
