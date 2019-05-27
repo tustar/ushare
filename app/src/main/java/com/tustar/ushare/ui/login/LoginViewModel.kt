@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
 import com.tustar.ushare.LiveEvent
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication.Companion.context
@@ -33,6 +34,8 @@ import com.tustar.ushare.util.Preference
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit
 
@@ -61,7 +64,7 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                 .autoDisposable(this)
                 .subscribe({
                     it.execute(
-                            ok = { captcha->
+                            ok = { captcha ->
                                 context.toast(R.string.login_captcha_get_success)
                                 showCaptcha(captcha.code)
                                 startCaptchaTimer()
@@ -81,6 +84,18 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
                         R.string.login_captcha_get_err
                     }
                 }
+    }
+
+    fun login() {
+        // 协程自动监听并取消任务
+        viewModelScope.launch {
+
+        }
+
+        // UI销毁时取消任务
+        GlobalScope.launch {
+
+        }
     }
 
     fun login(mobile: String, captcha: String) {

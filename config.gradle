@@ -20,8 +20,7 @@ ext {
             androidx  : [
                     lib             : "1.0.0",
                     constraintlayout: "1.1.3",
-
-                    lifecycle       : "2.0.0",
+                    lifecycle       : "2.1.0-beta01",
                     room            : "2.0.0",
                     paging          : "2.1.0-rc01",
                     navigation      : "2.0.0",
@@ -105,6 +104,7 @@ ext {
                             extensions     : "androidx.lifecycle:lifecycle-extensions:${versions.androidx.lifecycle}",
                             liveData       : "androidx.lifecycle:lifecycle-livedata:${versions.androidx.lifecycle}",
                             viewModel      : "androidx.lifecycle:lifecycle-viewmodel:${versions.androidx.lifecycle}",
+                            viewModelKtx   : "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.androidx.lifecycle}",
                             reactivestreams: "androidx.lifecycle:lifecycle-reactivestreams:${versions.androidx.lifecycle}"
                     ],
                     room            : [
@@ -141,7 +141,7 @@ ext {
                     permissions   : "com.github.tbruyelle:rxpermissions:${versions.rx.permissions}",
                     activityResult: "com.github.VictorAlbertos:RxActivityResult:${versions.rx.activityResult}",
                     autodispose   : [
-                            android    : "com.uber.autodispose:autodispose-android:${versions.rx.autodispose}",
+                            android       : "com.uber.autodispose:autodispose-android:${versions.rx.autodispose}",
                             archcomponents: "com.uber.autodispose:autodispose-android-archcomponents:${versions.rx.autodispose}"
                     ],
             ],

@@ -32,8 +32,6 @@ android {
             targetCompatibility JavaVersion.VERSION_1_8
 
         }
-
-        multiDexEnabled true
     }
 
     buildTypes {
@@ -78,8 +76,6 @@ dependencies {
     // libs
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation 'com.android.support:multidex:1.0.3'
-
     // Test
     testImplementation rootProject.ext.deps.test.junit
     // Android Test
@@ -95,6 +91,7 @@ dependencies {
     // AndroidX-Lifecycle
     implementation rootProject.ext.deps.androidx.lifecycle.extensions
     implementation rootProject.ext.deps.androidx.lifecycle.reactivestreams
+    implementation rootProject.ext.deps.androidx.lifecycle.viewModelKtx
     // AndroidX-Navigation-ktx
     implementation rootProject.ext.deps.androidx.navigation.fragmentKtx
     implementation rootProject.ext.deps.androidx.navigation.uiKtx

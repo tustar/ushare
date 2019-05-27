@@ -11,11 +11,14 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.coroutines.Job
 
 /**
  * base [ViewModel] that can automatically dispose itself in [onCleared].
  */
 open class BaseViewModel : ViewModel(), LifecycleScopeProvider<BaseViewModel.ViewModelEvent> {
+
+    val jobs = mutableListOf<Job>()
 
     // Subject backing the auto disposing of subscriptions.
     private val lifecycleEvents = BehaviorSubject.createDefault(
@@ -62,6 +65,7 @@ open class BaseViewModel : ViewModel(), LifecycleScopeProvider<BaseViewModel.Vie
     override fun onCleared() {
         lifecycleEvents.onNext(ViewModelEvent.CLEARED)
         super.onCleared()
+        jobs.forEach(Job::cancel)
     }
 
     companion object {
