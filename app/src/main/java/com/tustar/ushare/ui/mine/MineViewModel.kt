@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.viewModelScope
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication.Companion.context
 import com.tustar.ushare.base.BaseViewModel
@@ -13,7 +14,7 @@ import com.tustar.ushare.data.helper.Message
 import com.tustar.ushare.data.helper.StatusCode
 import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.vmf.UserViewModelFactory
-import com.uber.autodispose.autoDisposable
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 
 
@@ -24,41 +25,42 @@ class MineViewModel(private val repo: UserRepository) : BaseViewModel() {
         get() = _user
 
     fun getUserInfo() {
-        repo.getUser()
-                .autoDisposable(this)
-                .subscribe({
-                    it.execute(
-                            ok = { user ->
-                                _user.value = user
-                            },
-                            failure = { message ->
-                                Message.handleFailure(message)
-                            })
-                }) {
-                    StatusCode.handleException(it)
-                }
+        viewModelScope.launch {
+            try {
+                val response = repo.getUser().await()
+                response.execute(
+                        ok = { user ->
+                            _user.value = user
+                        },
+                        failure = { message ->
+                            Message.handleFailure(message)
+                        })
+            } catch (e: Exception) {
+                StatusCode.handleException(e)
+            }
+        }
     }
 
     fun updateNick(nick: String) {
-        repo.updateNick(nick)
-                .autoDisposable(this)
-                .subscribe({
-                    it.execute(
-                            ok = { user ->
-                                context.toast(R.string.mine_nick_success)
-                                _user.value = user
-                            },
-                            failure = { message ->
-                                Message.handleFailure(message) {
-                                    context.toast(R.string.mine_nick_failure)
-                                }
-                            })
-                }) {
-                    StatusCode.handleException(it) {
-                        R.string.mine_nick_failure
-                    }
+        viewModelScope.launch {
+            try {
+                val response = repo.updateNick(nick).await()
+                response.execute(
+                        ok = { user ->
+                            context.toast(R.string.mine_nick_success)
+                            _user.value = user
+                        },
+                        failure = { message ->
+                            Message.handleFailure(message) {
+                                context.toast(R.string.mine_nick_failure)
+                            }
+                        })
+            } catch (e: Exception) {
+                StatusCode.handleException(e) {
+                    R.string.mine_nick_failure
                 }
-
+            }
+        }
     }
 
     companion object {

@@ -17,9 +17,6 @@ import kotlinx.coroutines.Job
  * base [ViewModel] that can automatically dispose itself in [onCleared].
  */
 open class BaseViewModel : ViewModel(), LifecycleScopeProvider<BaseViewModel.ViewModelEvent> {
-
-    val jobs = mutableListOf<Job>()
-
     // Subject backing the auto disposing of subscriptions.
     private val lifecycleEvents = BehaviorSubject.createDefault(
             ViewModelEvent.CREATED)
@@ -65,7 +62,6 @@ open class BaseViewModel : ViewModel(), LifecycleScopeProvider<BaseViewModel.Vie
     override fun onCleared() {
         lifecycleEvents.onNext(ViewModelEvent.CLEARED)
         super.onCleared()
-        jobs.forEach(Job::cancel)
     }
 
     companion object {

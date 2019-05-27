@@ -22,7 +22,6 @@ import androidx.lifecycle.viewModelScope
 import com.tustar.ushare.LiveEvent
 import com.tustar.ushare.R
 import com.tustar.ushare.UShareApplication.Companion.context
-import com.tustar.ushare.vmf.UserViewModelFactory
 import com.tustar.ushare.base.BaseViewModel
 import com.tustar.ushare.data.entry.execute
 import com.tustar.ushare.data.helper.Message
@@ -31,10 +30,10 @@ import com.tustar.ushare.data.repository.UserRepository
 import com.tustar.ushare.util.CommonDefine
 import com.tustar.ushare.util.Logger
 import com.tustar.ushare.util.Preference
+import com.tustar.ushare.vmf.UserViewModelFactory
 import com.uber.autodispose.autoDisposable
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.anko.toast
 import java.util.concurrent.TimeUnit
@@ -58,77 +57,65 @@ class LoginViewModel(private val repo: UserRepository) : BaseViewModel() {
         get() = _toMainEvent
 
 
-    fun getCaptcha(mobile: String?) {
-        _captchaGetEnable.value = false
-        repo.captcha(mobile!!)
-                .autoDisposable(this)
-                .subscribe({
-                    it.execute(
-                            ok = { captcha ->
-                                context.toast(R.string.login_captcha_get_success)
-                                showCaptcha(captcha.code)
-                                startCaptchaTimer()
-                            },
-                            failure = { message ->
-                                Message.handleFailure(message) {
-                                    context.toast(R.string.login_captcha_get_err)
-                                }
-                                _captchaGetEnable.value = true
-                            },
-                            other = {
-                                _captchaGetEnable.value = true
-                            })
-                }) {
-                    _captchaGetEnable.value = true
-                    StatusCode.handleException(it) {
-                        R.string.login_captcha_get_err
-                    }
-                }
-    }
-
-    fun login() {
-        // 协程自动监听并取消任务
+    fun getCaptcha(mobile: String) {
         viewModelScope.launch {
-
-        }
-
-        // UI销毁时取消任务
-        GlobalScope.launch {
-
+            _captchaGetEnable.value = false
+            try {
+                val response = repo.captcha(mobile).await()
+                response.execute(
+                        ok = { captcha ->
+                            context.toast(R.string.login_captcha_get_success)
+                            showCaptcha(captcha.code)
+                            startCaptchaTimer()
+                        },
+                        failure = { message ->
+                            Message.handleFailure(message) {
+                                context.toast(R.string.login_captcha_get_err)
+                            }
+                            _captchaGetEnable.value = true
+                        },
+                        other = {
+                            _captchaGetEnable.value = true
+                        })
+            } catch (e: Exception) {
+                _captchaGetEnable.value = true
+                StatusCode.handleException(e) {
+                    R.string.login_captcha_get_err
+                }
+            }
         }
     }
 
     fun login(mobile: String, captcha: String) {
-        _submitEnable.value = false
-        repo.login(mobile!!, captcha!!)
-                .doOnTerminate {
-                    _submitEnable.value = true
+        viewModelScope.launch {
+            _submitEnable.value = false
+            try {
+                val response = repo.login(mobile, captcha).await()
+                response.execute(
+                        ok = { user ->
+                            var token: String by Preference(context,
+                                    CommonDefine.HEAD_ACCESS_TOKEN, "")
+                            token = user.token
+                            var mobile: String by Preference(context,
+                                    CommonDefine.PREF_KEY_USER_MOBILE, "")
+                            mobile = user.mobile
+                            var nick: String by Preference(context,
+                                    CommonDefine.PREF_KEY_USER_NICK, "")
+                            nick = user.nick
+                            _toMainEvent.value = LiveEvent(Unit)
+                        },
+                        failure = { message ->
+                            Message.handleFailure(message) {
+                                context.toast(R.string.login_submit_err)
+                            }
+                        })
+            } catch (e: Exception) {
+                StatusCode.handleException(e) {
+                    R.string.login_submit_err
                 }
-                .autoDisposable(this)
-                .subscribe({
-                    it.execute(
-                            ok = { user ->
-                                var token: String by Preference(context,
-                                        CommonDefine.HEAD_ACCESS_TOKEN, "")
-                                token = user.token
-                                var mobile: String by Preference(context,
-                                        CommonDefine.PREF_KEY_USER_MOBILE, "")
-                                mobile = user.mobile
-                                var nick: String by Preference(context,
-                                        CommonDefine.PREF_KEY_USER_NICK, "")
-                                nick = user.nick
-                                _toMainEvent.value = LiveEvent(Unit)
-                            },
-                            failure = { message ->
-                                Message.handleFailure(message) {
-                                    context.toast(R.string.login_submit_err)
-                                }
-                            })
-                }) {
-                    StatusCode.handleException(it) {
-                        R.string.login_submit_err
-                    }
-                }
+            }
+            _submitEnable.value = true
+        }
     }
 
     @SuppressLint("CheckResult")

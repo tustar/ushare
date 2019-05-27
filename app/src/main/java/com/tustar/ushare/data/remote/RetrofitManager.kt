@@ -1,5 +1,6 @@
 package com.tustar.ushare.data.remote
 
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.tustar.ushare.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -29,7 +30,7 @@ class RetrofitManager {
 
                 val retrofit = Retrofit.Builder()
                         .baseUrl(API_URL)
-                        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                        .addCallAdapterFactory(CoroutineCallAdapterFactory())
                         .addConverterFactory(GsonConverterFactory.create())
                         .client(client)
                         .build()
